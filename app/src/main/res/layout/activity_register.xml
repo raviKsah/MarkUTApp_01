@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
-    android:padding="16dp"
+    android:padding="12dp"
     android:scrollbarThumbVertical="@null"
     tools:context=".RegisterActivity">
 
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="5dp"
-        android:padding="10dp"
+        android:padding="8dp"
         Card_View:cardCornerRadius="5dp"
         Card_View:cardElevation="5dp">
 
@@ -62,7 +62,7 @@
                     android:id="@+id/Last_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:hint="@string/Last_name"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
@@ -76,25 +76,25 @@
 
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/nameError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                android:id="@+id/nameError"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="5dp">-->
 
-                <EditText
-                    android:id="@+id/name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:hint="@string/Username"
-                    android:inputType="textNoSuggestions"
-                    android:maxLines="1"
-                    android:paddingStart="5dp"
-                    android:singleLine="true"
-                    android:paddingLeft="5dp" />
+<!--                <EditText-->
+<!--                    android:id="@+id/name"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:hint="@string/Username"-->
+<!--                    android:inputType="textNoSuggestions"-->
+<!--                    android:maxLines="1"-->
+<!--                    android:paddingStart="5dp"-->
+<!--                    android:singleLine="true"-->
+<!--                    android:paddingLeft="5dp" />-->
 
-            </com.google.android.material.textfield.TextInputLayout>
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/emailError"
@@ -106,7 +106,7 @@
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
@@ -154,9 +154,9 @@
                     android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:hint="@string/phone_number"
-                    android:maxLength="12"
+                    android:maxLength="5"
                     android:inputType="number"
                     android:maxLines="1"
                     android:paddingStart="5dp"
@@ -176,7 +176,7 @@
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:hint="@string/prompt_password"
                     android:inputType="textPassword"
                     android:maxLines="1"
@@ -197,9 +197,42 @@
                     android:id="@+id/promptReenter_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:hint="@string/promptReenter_password"
                     android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:paddingStart="5dp"
+                    android:singleLine="true"
+                    android:paddingLeft="5dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="Security Questions"
+                android:layout_marginBottom="-10dp"/>
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:prompt="@string/spinner_question"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/securityAnsError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp">
+
+                <EditText
+                    android:id="@+id/SecurityAns"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:hint="Enter your security answer"
+                    android:maxLength="15"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:paddingStart="5dp"
                     android:singleLine="true"

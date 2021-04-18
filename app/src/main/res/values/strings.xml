@@ -14,6 +14,7 @@
     <string name="Male">Male</string>
     <string name="Female">Female</string>
     <string name="phone_number">Phone Number</string>
+    <string name="spinner_question">Select security question</string>
     <string name="register">Register</string>
     <string name="proceed">Proceed</string>
     <string name="name_error">Please enter your name</string>
