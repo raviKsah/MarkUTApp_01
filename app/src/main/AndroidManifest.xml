@@ -9,11 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".ViewDashboard"></activity>
         <activity
             android:name=".NavigationDrawer1"
             android:label="@string/title_activity_navigation_drawer1"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,11 +26,6 @@
             android:name=".ForgotPassword"
             android:label="@string/title_activity_forgot_password"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-
     </application>
-
-
-
-
 
 </manifest>
