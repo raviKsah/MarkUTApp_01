@@ -3,15 +3,19 @@ package com.example.markutapp_01;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
 public class ValidateSecurityQuestions extends AppCompatActivity {
 
@@ -44,11 +48,22 @@ public class ValidateSecurityQuestions extends AppCompatActivity {
 
     public void displaySecurityQuestions()
     {
+        Spinner questionList = (Spinner) findViewById(R.id.securityQuestions);
+
         String[] questions = getSecurityQuestions();
+        List<String> spinnerQuestions = new ArrayList<String>();
 
-        TextView q1 = (TextView)findViewById(R.id.question1);
+        for(int i = 0; i < questions.length; i++)
+        {
+            spinnerQuestions.add(questions[i]);
+        }
 
-        q1.setHint(questions[0]);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, questions);
+
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+
+        questionList.setAdapter(dataAdapter);
     }
 
     public void submitAnswers(View view)
@@ -65,17 +80,18 @@ public class ValidateSecurityQuestions extends AppCompatActivity {
 
         Intent intent = new Intent(getApplicationContext(), ChangePassword.class);
         startActivity(intent);
-
     }
 
     public boolean validateSecurityQuestions()
     {
         boolean isCorrectAnswer = false;
 
-        String[] questions = getSecurityQuestions();
+        Spinner uiQuestions = (Spinner)findViewById(R.id.securityQuestions);
         Dictionary answers = getAnswers();
 
-        String question = questions[0];
+        int questionID = uiQuestions.getSelectedItemPosition();
+        String[] questions = getSecurityQuestions();
+        String question = questions[questionID];
         String answer = (String)answers.get(question);
 
         EditText submittedAnswer = findViewById(R.id.question1);

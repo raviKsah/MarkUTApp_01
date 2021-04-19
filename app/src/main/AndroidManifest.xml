@@ -26,6 +26,14 @@
             android:name=".ForgotPassword"
             android:label="@string/title_activity_forgot_password"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".ValidateSecurityQuestions"
+            android:label="ValidateSecurityQuestions"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".ChangePassword"
+            android:label="ChangePassword"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
     </application>
 
 </manifest>
