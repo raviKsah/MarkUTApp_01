@@ -24,4 +24,8 @@ public class Globals {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public void clearUser() {
+        this.user = null;
+    }
 }
