@@ -1,8 +1,8 @@
 
 // This class is meant to store data for use throughout app.
-// Access these variables from any location by instantiating this static class, e.g.
-//      Globals globals = Globals.getInstance();
+// Access these variables from any location by instantiating this static class,
 // then access variables, e.g.
+//      Globals globals = Globals.getInstance();
 //      globals.getUser();
 public class Globals {
     // global variables below
