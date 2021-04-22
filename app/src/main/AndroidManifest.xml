@@ -9,10 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".ViewDashboard"></activity>
+        <activity
+            android:name=".PostAd"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity android:name=".ViewDashboard" />
         <activity
             android:name=".NavigationDrawer1"
-            android:label="@string/title_activity_navigation_drawer1"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -21,11 +23,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".RegisterActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ForgotPassword"
             android:label="@string/title_activity_forgot_password"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
