@@ -1,3 +1,4 @@
+package com.example.markutapp_01;
 
 // This class is meant to store data for use throughout app.
 // Access these variables from any location by instantiating this static class,
@@ -6,7 +7,7 @@
 //      globals.getUser();
 public class Globals {
     // global variables below
-    private static User user = new User();
+    private static User_Details user = new User_Details();
 
     private static final Globals instance = new Globals();
 
@@ -17,11 +18,11 @@ public class Globals {
         return instance;
     }
 
-    public User getUser() {
+    public User_Details getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(User_Details user) {
         this.user = user;
     }
 
