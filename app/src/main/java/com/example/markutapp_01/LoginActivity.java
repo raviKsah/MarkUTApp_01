@@ -1,6 +1,8 @@
 package com.example.markutapp_01;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -12,6 +14,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -20,12 +27,17 @@ public class LoginActivity extends AppCompatActivity {
     TextView register, forgotpassword;
     boolean isEmailValid, isPasswordValid;
     TextInputLayout emailError, passError;
+    DatabaseReference firebaseAuth;
+
+    private Session session;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        session = new Session(this);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
         login = (Button) findViewById(R.id.login);
@@ -45,9 +57,8 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // redirect to RegisterActivity
-                Intent intent = new Intent(getApplicationContext(), NavigationDrawer1.class);
-                startActivity(intent);
+                firebaseAuth = FirebaseDatabase.getInstance().getReference("User_Details");
+                SetValidation();
             }
         });
 
@@ -79,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
             emailError.setError(getResources().getString(R.string.error_invalid_email));
             isEmailValid = false;
-        } else  {
+        } else {
             isEmailValid = true;
             emailError.setErrorEnabled(false);
         }
@@ -88,18 +99,49 @@ public class LoginActivity extends AppCompatActivity {
         if (password.getText().toString().isEmpty()) {
             passError.setError(getResources().getString(R.string.password_error));
             isPasswordValid = false;
-        } else if (password.getText().length() < 6) {
-            passError.setError(getResources().getString(R.string.error_invalid_password));
-            isPasswordValid = false;
-        } else  {
+        } else {
             isPasswordValid = true;
             passError.setErrorEnabled(false);
         }
 
         if (isEmailValid && isPasswordValid) {
-            Toast.makeText(getApplicationContext(), "Successfully", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Successfully", Toast.LENGTH_SHORT).show();
+            verifyDetailsInFb();
         }
 
     }
 
+    public void verifyDetailsInFb() {
+        String id = email.getText().toString();
+        String user_password = password.getText().toString();
+
+
+        firebaseAuth.orderByChild("email_id").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String getPassword = "";
+                for (DataSnapshot datas : dataSnapshot.getChildren()) {
+                    getPassword = datas.child("password").getValue().toString();
+
+                }
+                if (getPassword.equals(user_password)) {
+
+                    session.setusename(id);
+
+
+                    Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(LoginActivity.this, ViewDashboard.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(LoginActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }
