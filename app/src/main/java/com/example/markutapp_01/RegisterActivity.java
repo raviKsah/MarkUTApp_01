@@ -55,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
         login = (TextView) findViewById(R.id.login);
         register = (Button) findViewById(R.id.register);
         answer=(EditText)findViewById(R.id.SecurityAns);
-        //radioGroup = (RadioGroup)findViewById(R.id.radGroup);
+        radioGroup = (RadioGroup)findViewById(R.id.radGroup);
 
         firstNameError=(TextInputLayout)findViewById(R.id.firstNameError);
         lastNameError=(TextInputLayout)findViewById(R.id.lastNameError);
