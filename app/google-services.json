@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "836375663887",
+    "firebase_url": "https://markutapp-78124-default-rtdb.firebaseio.com",
+    "project_id": "markutapp-78124",
+    "storage_bucket": "markutapp-78124.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836375663887:android:5f543f45bfef873f1f9a7a",
+        "android_client_info": {
+          "package_name": "com.example.image"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836375663887-n4ujsrfsfro0sgq7dqcgljirqlper7g4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyQTCfYABYfvqb_77Ks-U2-q2BAEfLpgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836375663887-n4ujsrfsfro0sgq7dqcgljirqlper7g4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836375663887:android:59c48fd5f075600d1f9a7a",
+        "android_client_info": {
+          "package_name": "com.example.loginpage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836375663887-n4ujsrfsfro0sgq7dqcgljirqlper7g4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyQTCfYABYfvqb_77Ks-U2-q2BAEfLpgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836375663887-n4ujsrfsfro0sgq7dqcgljirqlper7g4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836375663887:android:2462d6570ceeb51f1f9a7a",
+        "android_client_info": {
+          "package_name": "com.example.markutapp_01"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836375663887-n4ujsrfsfro0sgq7dqcgljirqlper7g4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyQTCfYABYfvqb_77Ks-U2-q2BAEfLpgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836375663887-n4ujsrfsfro0sgq7dqcgljirqlper7g4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

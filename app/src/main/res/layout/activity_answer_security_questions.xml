@@ -7,7 +7,7 @@
     android:background="@drawable/gradient"
     android:padding="16dp"
     android:scrollbarThumbVertical="@null"
-    tools:context=".">
+    tools:context=".ValidateSecurityQuestions">
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
@@ -77,13 +77,18 @@
                 android:text="Verify and Proceed"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
-                android:onClick="submitAnswers"/>
+                />
 
 
         </LinearLayout>
 
 
     </androidx.cardview.widget.CardView>
+
+
+
+
+
 
 
 </ScrollView>

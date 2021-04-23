@@ -61,4 +61,6 @@
     <string name="menu_home">MarkUTApp</string>
     <string name="menu_gallery">Your listings</string>
     <string name="menu_slideshow">Slideshow</string>
+
+    <string name="title_post">Title</string>
 </resources>

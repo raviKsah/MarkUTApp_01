@@ -57,8 +57,14 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // redirect to View Dashboard
+                Intent intent = new Intent(getApplicationContext(), NavigationDrawer1.class);
+                startActivity(intent);
+
                 firebaseAuth = FirebaseDatabase.getInstance().getReference("User_Details");
                 SetValidation();
+
             }
         });
 

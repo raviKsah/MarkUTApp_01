@@ -5,4 +5,19 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
+
+
+    <dimen name="entrybooking_linermarginleft">5dp</dimen>
+    <dimen name="entrybooking_linermarginright">5dp</dimen>
+    <dimen name="entrybooking_linermargintop">5dp</dimen>
+    <dimen name="entrybooking_linerpadding">5dp</dimen>
+
+    <dimen name="entrybooking_linerpaddingtop">20dp</dimen>
+    <dimen name="entrybooking_linerpaddingbottom">15dp</dimen>
+    <dimen name="entrybooking_linerpaddingleft">10dp</dimen>
+    <dimen name="entrybooking_linerpaddingright">10dp</dimen>
+
+    <dimen name="entrybooking_tblrwpaddingleft">5dp</dimen>
+    <dimen name="entrybooking_tblpaddingright">5dp</dimen>
+    <dimen name="entrybooking_tblpaddingtop">15dp</dimen>
 </resources>
