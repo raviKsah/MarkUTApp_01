@@ -48,11 +48,6 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
 
-            <Spinner
-                android:id="@+id/securityQuestions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
             <com.google.android.material.textfield.TextInputLayout
 
                 android:id="@+id/questionError"
@@ -89,11 +84,6 @@
 
 
     </androidx.cardview.widget.CardView>
-
-
-
-
-
 
 
 </ScrollView>
