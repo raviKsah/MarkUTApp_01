@@ -58,9 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // redirect to View Dashboard
-                Intent intent = new Intent(getApplicationContext(), NavigationDrawer1.class);
-                startActivity(intent);
+
 
                 firebaseAuth = FirebaseDatabase.getInstance().getReference("User_Details");
                 SetValidation();
@@ -137,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(LoginActivity.this, ViewDashboard.class);
+                    Intent intent = new Intent(LoginActivity.this, NavigationDrawer1.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_LONG).show();
