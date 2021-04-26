@@ -19,14 +19,18 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NavigationDrawer1 extends AppCompatActivity {
-
-
+public class NavigationDrawer1 extends AppCompatActivity
+{
+    DatabaseReference firebaseAuth;
     ListView list;
 
     // Add empty value to display 5 ads.
@@ -52,6 +56,10 @@ public class NavigationDrawer1 extends AppCompatActivity {
             R.drawable.dowload_3,R.drawable.dowload_4,
             R.drawable.dowload_5,};
 
+    List<String> adTitle = new ArrayList<String>();
+    List<String> adPrice = new ArrayList<String>();
+    List<Integer> adImage = new ArrayList<Integer>();
+
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
@@ -61,6 +69,7 @@ public class NavigationDrawer1 extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        firebaseAuth = FirebaseDatabase.getInstance().getReference("Advertisements");
 
         FloatingActionButton fab = findViewById(R.id.sell);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -91,9 +100,7 @@ public class NavigationDrawer1 extends AppCompatActivity {
 
         //searchBar.setIconifiedByDefault(true);
 
-        MyListAdapter adapter=new MyListAdapter(this, maintitle, subtitle,imgid);
-        list=(ListView)findViewById(R.id.list);
-        list.setAdapter(adapter);
+        getAdvertisements();
     }
 
     @Override
@@ -111,6 +118,57 @@ public class NavigationDrawer1 extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    public void getAdvertisements()
+    {
+        firebaseAuth.orderByChild("ad_id").limitToLast(20).addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                int i = 0;
+
+                adTitle.add("");
+                adPrice.add("");
+                adImage.add(R.drawable.dowload_1);
+                for (DataSnapshot datas : dataSnapshot.getChildren())
+                {
+                    adTitle.add(datas.child("title").getValue().toString());
+                    adPrice.add(datas.child("price").getValue().toString());
+                    adImage.add(R.drawable.dowload_1);
+                }
+
+                System.out.println("bananas");
+                System.out.println(adTitle.size());
+
+                MyListAdapter adapter=new MyListAdapter(
+                        NavigationDrawer1.this,
+                        adPrice.toArray(new String[adPrice.size()]),
+                        adTitle.toArray(new String[adTitle.size()]),
+                        adImage.toArray(new Integer[adImage.size()]));
+                list=(ListView)findViewById(R.id.list);
+                list.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+                return;
+            }
+        });
+    }
+
+/*    public Integer[] convertToArray(List<int> list)
+    {
+        int[] convertedArray = new int[list.size()];
+
+        for(int i = 0; i < list.size(); i++)
+        {
+            convertedArray[i] = list.get(i);
+        }
+
+        return convertedArray;
+    }
+*/
     public void displayAdvertisementCategories()
     {
         Spinner categoryList = (Spinner) findViewById(R.id.searchCategories);
