@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NavigationDrawer1 extends AppCompatActivity
@@ -98,8 +99,6 @@ public class NavigationDrawer1 extends AppCompatActivity
 
         SearchView searchBar = (SearchView)findViewById(R.id.search);
 
-        //searchBar.setIconifiedByDefault(true);
-
         getAdvertisements();
     }
 
@@ -120,16 +119,13 @@ public class NavigationDrawer1 extends AppCompatActivity
 
     public void getAdvertisements()
     {
-        firebaseAuth.orderByChild("ad_id").limitToLast(20).addValueEventListener(new ValueEventListener()
+        firebaseAuth.orderByChild("date_created").limitToLast(20).addValueEventListener(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 int i = 0;
 
-                adTitle.add("");
-                adPrice.add("");
-                adImage.add(R.drawable.dowload_1);
                 for (DataSnapshot datas : dataSnapshot.getChildren())
                 {
                     adTitle.add(datas.child("title").getValue().toString());
@@ -137,8 +133,14 @@ public class NavigationDrawer1 extends AppCompatActivity
                     adImage.add(R.drawable.dowload_1);
                 }
 
-                System.out.println("bananas");
-                System.out.println(adTitle.size());
+                Collections.reverse(adTitle);
+                Collections.reverse(adPrice);
+                Collections.reverse(adImage);
+
+                // Add empty advertisements to beginning of the list for formatting.
+                adTitle.add(0, "");
+                adPrice.add(0, "");
+                adImage.add(0, R.drawable.dowload_1);
 
                 MyListAdapter adapter=new MyListAdapter(
                         NavigationDrawer1.this,
