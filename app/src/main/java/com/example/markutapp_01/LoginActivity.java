@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                     String sec_question = "";
                     String sec_answer = "";
                     Globals global = Globals.getInstance();
-                    User_Details user = new User_Details(first_name, last_name, email_id, password,
+                    User_Details user = new User_Details(first_name, last_name, email_id, user_password,
                                                          contact, gender, role, sec_question,
                                                          sec_answer);
                     global.setUser(user);
