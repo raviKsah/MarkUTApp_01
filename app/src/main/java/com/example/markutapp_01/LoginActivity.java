@@ -134,12 +134,21 @@ public class LoginActivity extends AppCompatActivity {
                     String first_name = "";
                     String last_name = "";
                     String email_id = "";
-                    String password = "";
                     String contact = "";
                     String gender = "";
                     String role = "";
                     String sec_question = "";
                     String sec_answer = "";
+
+                    first_name = datas.child("first_name").getValue().toString();
+                    last_name = datas.child("last_name").getValue().toString();
+                    email_id = datas.child("email_id").getValue().toString();
+                    contact = datas.child("contact").getValue().toString();
+                    gender = datas.child("gender").getValue().toString();
+                    role = datas.child("role").getValue().toString();
+                    sec_question = datas.child("sec_question").getValue().toString();
+                    sec_answer = datas.child("sec_answer").getValue().toString();
+
                     Globals global = Globals.getInstance();
                     User_Details user = new User_Details(first_name, last_name, email_id, user_password,
                                                          contact, gender, role, sec_question,
