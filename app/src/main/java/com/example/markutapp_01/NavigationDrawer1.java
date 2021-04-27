@@ -133,6 +133,8 @@ public class NavigationDrawer1 extends AppCompatActivity
 
             //Divya Krishna will fetch values based on search value
 
+            // based on the date advertisement should display (order by date) //
+
 
             public void onDataChange(@NonNull DataSnapshot datasnapshot) {
                 ClearAll();
