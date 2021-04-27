@@ -128,10 +128,9 @@ public class LoginActivity extends AppCompatActivity {
                 String last_name = "";
                 String email_id = "";
                 String contact = "";
-                String gender = "";
-                String role = "";
-                String sec_question = "";
-                String sec_answer = "";
+                String type = "";
+                String security_question = "";
+                String security_answer = "";
 
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     getPassword = datas.child("password").getValue().toString();
@@ -140,10 +139,9 @@ public class LoginActivity extends AppCompatActivity {
                     last_name = datas.child("last_name").getValue().toString();
                     email_id = datas.child("email_id").getValue().toString();
                     contact = datas.child("contact").getValue().toString();
-                    gender = datas.child("gender").getValue().toString();
-                    role = datas.child("role").getValue().toString();
-                    sec_question = datas.child("sec_question").getValue().toString();
-                    sec_answer = datas.child("sec_answer").getValue().toString();
+                    type = datas.child("type").getValue().toString();
+                    security_question = datas.child("security_question").getValue().toString();
+                    security_answer = datas.child("security_answer").getValue().toString();
 
                 }
                 if (getPassword.equals(user_password)) {
@@ -152,8 +150,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     Globals global = Globals.getInstance();
                     User_Details user = new User_Details(first_name, last_name, email_id, user_password,
-                                                         contact, gender, role, sec_question,
-                                                         sec_answer);
+                                                         contact, type , security_question,
+                            security_answer);
                     global.setUser(user);
 
                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_LONG).show();

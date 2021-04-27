@@ -31,9 +31,6 @@ public class RegisterActivity extends AppCompatActivity {
     TextView login;
     boolean isFirstNameValid,isLastNameValid, isEmailValid, isPhoneValid, isPasswordValid;
     TextInputLayout firstNameError,lastNameError, emailError, phoneError, passError;
-    RadioButton gender;
-    RadioGroup radioGroup;
-    String user_gender="";
     String question ="";
     String type="End User";
     DatabaseReference firebaseAuth;
@@ -55,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         login = (TextView) findViewById(R.id.login);
         register = (Button) findViewById(R.id.register);
         answer=(EditText)findViewById(R.id.SecurityAns);
-        radioGroup = (RadioGroup)findViewById(R.id.radGroup);
+//        radioGroup = (RadioGroup)findViewById(R.id.radGroup);
 
         firstNameError=(TextInputLayout)findViewById(R.id.firstNameError);
         lastNameError=(TextInputLayout)findViewById(R.id.lastNameError);
@@ -90,13 +87,6 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(radioGroup.getCheckedRadioButtonId()!=-1){
-                    int id= radioGroup.getCheckedRadioButtonId();
-                    View radioButton = radioGroup.findViewById(id);
-                    int radioId = radioGroup.indexOfChild(radioButton);
-                    RadioButton btn = (RadioButton) radioGroup.getChildAt(radioId);
-                    user_gender = (String) btn.getText();
-                }
                 SetValidation();
             }
         });
@@ -180,7 +170,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (!TextUtils.isEmpty(email_id)) {
             String id = firebaseAuth.push().getKey();
-            User_Details user = new User_Details(first_name, last_name, email_id, user_password, contact, user_gender, type,question,sec_answer);
+            User_Details user = new User_Details(first_name, last_name, email_id, user_password, contact, type,question,sec_answer);
             firebaseAuth.child(id).setValue(user);
             Toast.makeText(this, "User Added", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
