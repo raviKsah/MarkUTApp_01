@@ -123,22 +123,18 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String getPassword = "";
+
+                String first_name = "";
+                String last_name = "";
+                String email_id = "";
+                String contact = "";
+                String gender = "";
+                String role = "";
+                String sec_question = "";
+                String sec_answer = "";
+
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     getPassword = datas.child("password").getValue().toString();
-
-                }
-                if (getPassword.equals(user_password)) {
-
-                    session.setusename(id);
-
-                    String first_name = "";
-                    String last_name = "";
-                    String email_id = "";
-                    String contact = "";
-                    String gender = "";
-                    String role = "";
-                    String sec_question = "";
-                    String sec_answer = "";
 
                     first_name = datas.child("first_name").getValue().toString();
                     last_name = datas.child("last_name").getValue().toString();
@@ -148,6 +144,11 @@ public class LoginActivity extends AppCompatActivity {
                     role = datas.child("role").getValue().toString();
                     sec_question = datas.child("sec_question").getValue().toString();
                     sec_answer = datas.child("sec_answer").getValue().toString();
+
+                }
+                if (getPassword.equals(user_password)) {
+
+                    session.setusename(id);
 
                     Globals global = Globals.getInstance();
                     User_Details user = new User_Details(first_name, last_name, email_id, user_password,
