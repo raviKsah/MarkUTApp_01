@@ -7,7 +7,10 @@ public class User_Details {
     public User_Details() {
     }
 
-    public User_Details(String first_name, String last_name, String email_id, String password, String contact, String gender, String role,String sec_question,String sec_answer) {
+    // Constructor for new registration or information from database
+    public User_Details(String first_name, String last_name, String email_id, String password,
+                        String contact, String gender, String role, String sec_question,
+                        String sec_answer) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email_id = email_id;
@@ -17,7 +20,6 @@ public class User_Details {
         this.type=role;
         this.security_question=sec_question;
         this.security_answer=sec_answer;
-
     }
 
     public String getSecurity_question() {

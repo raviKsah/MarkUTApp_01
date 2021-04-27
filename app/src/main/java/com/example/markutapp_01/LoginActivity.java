@@ -1,8 +1,6 @@
 package com.example.markutapp_01;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -133,6 +131,20 @@ public class LoginActivity extends AppCompatActivity {
 
                     session.setusename(id);
 
+                    String first_name = "";
+                    String last_name = "";
+                    String email_id = "";
+                    String password = "";
+                    String contact = "";
+                    String gender = "";
+                    String role = "";
+                    String sec_question = "";
+                    String sec_answer = "";
+                    Globals global = Globals.getInstance();
+                    User_Details user = new User_Details(first_name, last_name, email_id, password,
+                                                         contact, gender, role, sec_question,
+                                                         sec_answer);
+                    global.setUser(user);
 
                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(LoginActivity.this, NavigationDrawer1.class);
