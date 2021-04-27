@@ -13,6 +13,7 @@
     <color name="black_overlay">#66000000</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="red">#FF061E</color>
     <color name="actionbariconcolor">#ffffff</color>
 
 </resources>
