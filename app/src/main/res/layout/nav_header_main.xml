@@ -33,6 +33,6 @@
         android:id="@+id/textView101"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing" />
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/nav_header_subtitle" />
 </LinearLayout>
