@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +30,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class NavigationDrawer1 extends AppCompatActivity
@@ -40,6 +40,8 @@ public class NavigationDrawer1 extends AppCompatActivity
 
 
     private AppBarConfiguration mAppBarConfiguration;
+    private Globals global = Globals.getInstance();
+
 
 
     //widgets
@@ -53,6 +55,7 @@ public class NavigationDrawer1 extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_navigation_drawer1);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -74,6 +77,13 @@ public class NavigationDrawer1 extends AppCompatActivity
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView headerUser = (TextView) headerView.findViewById(R.id.textView100);
+        TextView headerEmail = (TextView) headerView.findViewById(R.id.textView101);
+        headerUser.setText(global.getUser().getFirst_name());
+        headerEmail.setText(global.getUser().getEmail_id());
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -88,6 +98,14 @@ public class NavigationDrawer1 extends AppCompatActivity
         String searchValue = searchBar.getQuery().toString();
 
 
+        navigationView.getMenu().findItem(R.id.logout).setOnMenuItemClickListener(menuItem -> {
+            global.clearUser();
+            Toast.makeText(NavigationDrawer1.this, "Logout Successful", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(NavigationDrawer1.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return true;
+        });
 
         recyclerView=findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
