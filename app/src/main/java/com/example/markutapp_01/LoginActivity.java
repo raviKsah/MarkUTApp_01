@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         forgotpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // redirect to RegisterActivity
+                // redirect to ForgotPassword
                 Intent intent = new Intent(getApplicationContext(), ForgotPassword.class);
                 startActivity(intent);
             }

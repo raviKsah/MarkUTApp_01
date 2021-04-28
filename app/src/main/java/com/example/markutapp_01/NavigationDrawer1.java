@@ -97,6 +97,13 @@ public class NavigationDrawer1 extends AppCompatActivity
         String searchValue = searchBar.getQuery().toString();
 
 
+        navigationView.getMenu().findItem(R.id.logout).setOnMenuItemClickListener(menuItem -> {
+            global.clearUser();
+            Intent intent = new Intent(NavigationDrawer1.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return true;
+        });
 
         recyclerView=findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
