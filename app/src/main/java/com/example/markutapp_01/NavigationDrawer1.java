@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class NavigationDrawer1 extends AppCompatActivity
@@ -40,6 +39,8 @@ public class NavigationDrawer1 extends AppCompatActivity
 
 
     private AppBarConfiguration mAppBarConfiguration;
+    private Globals global = Globals.getInstance();
+
 
 
     //widgets
@@ -53,6 +54,7 @@ public class NavigationDrawer1 extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_navigation_drawer1);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -74,6 +76,13 @@ public class NavigationDrawer1 extends AppCompatActivity
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView headerUser = (TextView) headerView.findViewById(R.id.textView100);
+        TextView headerEmail = (TextView) headerView.findViewById(R.id.textView101);
+        headerUser.setText(global.getUser().getFirst_name());
+        headerEmail.setText(global.getUser().getEmail_id());
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
