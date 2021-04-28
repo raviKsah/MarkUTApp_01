@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -99,6 +100,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
         navigationView.getMenu().findItem(R.id.logout).setOnMenuItemClickListener(menuItem -> {
             global.clearUser();
+            Toast.makeText(NavigationDrawer1.this, "Logout Successful", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(NavigationDrawer1.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
