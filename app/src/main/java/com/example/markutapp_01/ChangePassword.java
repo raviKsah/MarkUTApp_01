@@ -121,7 +121,7 @@ public class ChangePassword extends AppCompatActivity
 					datas.getRef().child("password").setValue(newPassword);
 				}
 
-				displayMessage("PASSWORD RESET", "Your password has successfully been reset.");
+				Toast.makeText(ChangePassword.this, "Your password has successfully been reset!", Toast.LENGTH_LONG).show();
 				//startActivity(new Intent(com.elevenzon.MarkUTApp.ChangePassword.this, LoginActivity.class));
 				Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
 				startActivity(intent);
