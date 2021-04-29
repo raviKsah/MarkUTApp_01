@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -42,8 +43,6 @@ public class NavigationDrawer1 extends AppCompatActivity
     private AppBarConfiguration mAppBarConfiguration;
     private Globals global = Globals.getInstance();
 
-
-
     //widgets
     RecyclerView recyclerView;
     //firebase:
@@ -51,6 +50,7 @@ public class NavigationDrawer1 extends AppCompatActivity
     //variables:
     private ArrayList<Messages> messagesList;
     private RecyclerAdapter recyclerAdapter;
+    private MyListingsAdapter myListingAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +116,34 @@ public class NavigationDrawer1 extends AppCompatActivity
         //Arraylist
         messagesList=new ArrayList<>();
         ClearAll();
-        GetDataFromFirebase();
+        GetDataFromFirebase(false);
+
+        navigationView.getMenu().findItem(R.id.nav_gallery).setOnMenuItemClickListener(menuItem ->
+        {
+            fab.setVisibility(View.GONE);
+            GetDataFromFirebase(true);
+            return true;
+        });
+
+        navigationView.getMenu().findItem(R.id.viewDashboard).setOnMenuItemClickListener(menuItem ->
+        {
+            fab.setVisibility(View.VISIBLE);
+            GetDataFromFirebase(false);
+            return true;
+        });
+    }
+
+    public void editAd(View view)
+    {
+        LinearLayout ll = (LinearLayout)findViewById(R.id.adInfoEdit);
+
+        TextView v = (TextView)ll.getChildAt(1);
+
+        System.out.println(v.getText().toString());
+
+        Intent intent = new Intent(NavigationDrawer1.this, EditAdvertisement.class);
+        intent.putExtra("adID", view.getId());
+        startActivity(intent);
     }
 
     @Override
@@ -137,7 +164,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
 
 
-    private void GetDataFromFirebase() {
+    private void GetDataFromFirebase(boolean myListing) {
         //Query query=myRef.child();
         System.out.println(myRef);
         myRef.addValueEventListener(new ValueEventListener() {
@@ -156,17 +183,40 @@ public class NavigationDrawer1 extends AppCompatActivity
 
             public void onDataChange(@NonNull DataSnapshot datasnapshot) {
                 ClearAll();
+
+                User_Details user = global.getUser();
+
                 for(DataSnapshot snapshot:datasnapshot.getChildren()){
                     Messages messages=new Messages();
+                    messages.setAdID(snapshot.child("ad_id").getValue().toString());
                     messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                     messages.setImageTitle(snapshot.child("title").getValue().toString());
                     messages.setPrice(snapshot.child("price").getValue().toString());
                     System.out.println("heyyyyyyyyy"+snapshot.child("image_path").getValue().toString() );
+
+                    if(!myListing && user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                    {
+                        System.out.println(user.email_id);
+                        System.out.println(snapshot.child("advertiser").getValue().toString());
+                        continue;
+                    }
+
                     messagesList.add(messages);
                 }
-                recyclerAdapter = new RecyclerAdapter(getApplicationContext(),messagesList);
-                recyclerView.setAdapter(recyclerAdapter);
-                recyclerAdapter.notifyDataSetChanged();
+
+                if(myListing)
+                {
+                    myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                    recyclerView.setAdapter(myListingAdapter);
+                    myListingAdapter.notifyDataSetChanged();
+                }
+
+                else
+                {
+                    recyclerAdapter = new RecyclerAdapter(getApplicationContext(),messagesList);
+                    recyclerView.setAdapter(recyclerAdapter);
+                    recyclerAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
