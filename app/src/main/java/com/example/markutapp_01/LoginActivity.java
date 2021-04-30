@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     DatabaseReference firebaseAuth;
 
     private Session session;
-
+    private Globals global = Globals.getInstance();
 
 
     @Override
@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         forgotpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // redirect to RegisterActivity
+                // redirect to ForgotPassword
                 Intent intent = new Intent(getApplicationContext(), ForgotPassword.class);
                 startActivity(intent);
             }
@@ -148,15 +148,22 @@ public class LoginActivity extends AppCompatActivity {
 
                     session.setusename(id);
 
-                    Globals global = Globals.getInstance();
                     User_Details user = new User_Details(first_name, last_name, email_id, user_password,
-                                                         contact, type , security_question,
-                            security_answer);
+                                                         contact, type , security_question, security_answer);
                     global.setUser(user);
 
                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_LONG).show();
+
+                        //TextView textView = (TextView) findViewById(R.id.textView101);
+                        //textView.setText("text@text.txt");
+                        //textView.invalidate();
+
+
                     Intent intent = new Intent(LoginActivity.this, NavigationDrawer1.class);
+                        intent.putExtra("key","hello");
                     startActivity(intent);
+
+
                 } else {
                     Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_LONG).show();
                 }
