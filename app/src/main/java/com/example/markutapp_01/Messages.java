@@ -1,6 +1,7 @@
 package com.example.markutapp_01;
 
 public class Messages {
+    String adID;
     String description;
     String title;
     String image_path;
@@ -11,11 +12,22 @@ public class Messages {
     public Messages() {
     }
 
-    public Messages(String imageDesc, String imageTitle, String imageUrl, String price) {
+    public Messages(String adID, String imageDesc, String imageTitle, String imageUrl, String price) {
+        this.adID = adID;
         this.description = imageDesc;
         this.title = imageTitle;
         this.image_path = imageUrl;
         this.price = price;
+    }
+
+    public String getAdID()
+    {
+        return adID;
+    }
+
+    public void setAdID(String adID)
+    {
+        this.adID = adID;
     }
 
     public String getImageDesc() {

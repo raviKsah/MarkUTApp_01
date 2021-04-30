@@ -10,8 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".PostAd"
+            android:name=".EditAdvertisement"
+            android:label="@string/title_activity_edit_advertisement"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity
+            android:name=".PostAd"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity android:name=".ViewDashboard" />
         <activity
             android:name=".NavigationDrawer1"
@@ -38,10 +42,7 @@
         <activity
             android:name=".ChangePassword"
             android:label="ChangePassword"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar">
-
-        </activity>
-
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
     </application>
 
 </manifest>

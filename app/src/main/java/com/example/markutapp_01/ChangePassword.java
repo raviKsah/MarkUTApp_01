@@ -1,7 +1,5 @@
 package com.example.markutapp_01;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -53,14 +51,10 @@ public class ChangePassword extends AppCompatActivity
 
 	}
 
-
-
 	public boolean isPasswordCorrect()
 	{
 		boolean isPasswordValid = false;
-
-
-
+		
 		if (passwordFirst.getText().toString().isEmpty())
 		{
 			pw1Err.setError("Please enter a password.");
@@ -91,22 +85,6 @@ public class ChangePassword extends AppCompatActivity
 		return isPasswordValid;
 	}
 
-	public void displayMessage(String title, String message)
-	{
-		AlertDialog alert = new AlertDialog.Builder(com.example.markutapp_01.ChangePassword.this).create();
-		alert.setTitle(title);
-		alert.setMessage(message);
-		alert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-				new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int which)
-					{
-						dialog.dismiss();
-					}
-				});
-
-		alert.show();
-	}
 	public void updatePasswordInFb(){
 
 	String id=session.getSecUserEmail();
@@ -121,7 +99,7 @@ public class ChangePassword extends AppCompatActivity
 					datas.getRef().child("password").setValue(newPassword);
 				}
 
-				displayMessage("PASSWORD RESET", "Your password has successfully been reset.");
+				Toast.makeText(ChangePassword.this, "Your password has successfully been reset!", Toast.LENGTH_LONG).show();
 				//startActivity(new Intent(com.elevenzon.MarkUTApp.ChangePassword.this, LoginActivity.class));
 				Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
 				startActivity(intent);

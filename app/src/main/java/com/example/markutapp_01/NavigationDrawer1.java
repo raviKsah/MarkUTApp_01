@@ -6,9 +6,10 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +31,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,6 +45,8 @@ public class NavigationDrawer1 extends AppCompatActivity
     private AppBarConfiguration mAppBarConfiguration;
 
     String category;
+    private Globals global = Globals.getInstance();
+
     //widgets
     RecyclerView recyclerView;
     //firebase:
@@ -54,9 +56,12 @@ public class NavigationDrawer1 extends AppCompatActivity
     private RecyclerAdapter recyclerAdapter;
     private RecyclerAdapter recyclerAdapter1;
     Spinner categoryList;
+    private MyListingsAdapter myListingAdapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_navigation_drawer1);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,6 +84,13 @@ public class NavigationDrawer1 extends AppCompatActivity
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView headerUser = (TextView) headerView.findViewById(R.id.textView100);
+        TextView headerEmail = (TextView) headerView.findViewById(R.id.textView101);
+        headerUser.setText(global.getUser().getFirst_name());
+        headerEmail.setText(global.getUser().getEmail_id());
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -105,6 +117,14 @@ public class NavigationDrawer1 extends AppCompatActivity
         });**/
 
 
+        navigationView.getMenu().findItem(R.id.logout).setOnMenuItemClickListener(menuItem -> {
+            global.clearUser();
+            Toast.makeText(NavigationDrawer1.this, "Logout Successful", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(NavigationDrawer1.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return true;
+        });
 
         recyclerView=findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -184,11 +204,34 @@ public class NavigationDrawer1 extends AppCompatActivity
         //Arraylist
         messagesList=new ArrayList<>();
         ClearAll();
-        GetDataFromFirebase();
+        GetDataFromFirebase(false);
 
+        navigationView.getMenu().findItem(R.id.nav_gallery).setOnMenuItemClickListener(menuItem ->
+        {
+            fab.setVisibility(View.GONE);
+            GetDataFromFirebase(true);
+            return true;
+        });
 
+        navigationView.getMenu().findItem(R.id.viewDashboard).setOnMenuItemClickListener(menuItem ->
+        {
+            fab.setVisibility(View.VISIBLE);
+            GetDataFromFirebase(false);
+            return true;
+        });
     }
 
+/*    public void editAd(View view)
+    {
+        LinearLayout ll = (LinearLayout)findViewById(R.id.adInfoEdit);
+
+        TextView v = (TextView)ll.getChildAt(1);
+
+        Intent intent = new Intent(NavigationDrawer1.this, EditAdvertisement.class);
+        intent.putExtra("adID", view.getId());
+        startActivity(intent);
+    }
+*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -277,7 +320,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
 
 
-    private void GetDataFromFirebase() {
+    private void GetDataFromFirebase(boolean myListing) {
         //Query query=myRef.child();
         System.out.println(myRef);
 
@@ -289,32 +332,46 @@ public class NavigationDrawer1 extends AppCompatActivity
             // based on the date advertisement should display (order by date) //
 
                 myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
 
-                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                        ClearAll();
+                public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                ClearAll();
 
-                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                            Messages messages = new Messages();
-                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                            messages.setImageTitle(snapshot.child("title").getValue().toString());
-                            messages.setPrice(snapshot.child("price").getValue().toString());
-                            //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                            messagesList.add(messages);
-                        }
-                        recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
-                        recyclerView.setAdapter(recyclerAdapter);
-                        recyclerAdapter.notifyDataSetChanged();
+                User_Details user = global.getUser();
+
+                for(DataSnapshot snapshot:datasnapshot.getChildren()){
+                    Messages messages=new Messages();
+                    messages.setAdID(snapshot.child("ad_id").getValue().toString());
+                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                    messages.setImageTitle(snapshot.child("title").getValue().toString());
+                    messages.setPrice(snapshot.child("price").getValue().toString());
+                    System.out.println("heyyyyyyyyy"+snapshot.child("image_path").getValue().toString() );
+
+                    if(myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                    {
+                        continue;
                     }
 
+                    messagesList.add(messages);
+                }
+
+                if(myListing)
+                {
+                    myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                    recyclerView.setAdapter(myListingAdapter);
+                    myListingAdapter.notifyDataSetChanged();
+                }
+
+                else
+                {
+                    recyclerAdapter = new RecyclerAdapter(getApplicationContext(),messagesList);
+                    recyclerView.setAdapter(recyclerAdapter);
+                    recyclerAdapter.notifyDataSetChanged();
+                }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
-                });
-
-
-
+                });s
 
         }
 
@@ -353,6 +410,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                         recyclerAdapter1.notifyDataSetChanged();
                     }
                 }
+            }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
