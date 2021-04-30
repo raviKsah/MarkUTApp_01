@@ -44,11 +44,8 @@ public class NavigationDrawer1 extends AppCompatActivity
     String items;
     private AppBarConfiguration mAppBarConfiguration;
 
-
     String category;
-
     private Globals global = Globals.getInstance();
-
 
     //widgets
     RecyclerView recyclerView;
@@ -57,12 +54,9 @@ public class NavigationDrawer1 extends AppCompatActivity
     //variables:
     private ArrayList<Messages> messagesList;
     private RecyclerAdapter recyclerAdapter;
-
     private RecyclerAdapter recyclerAdapter1;
     Spinner categoryList;
-
     private MyListingsAdapter myListingAdapter = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,11 +204,6 @@ public class NavigationDrawer1 extends AppCompatActivity
         //Arraylist
         messagesList=new ArrayList<>();
         ClearAll();
-
-        
-
-
-
         GetDataFromFirebase(false);
 
         navigationView.getMenu().findItem(R.id.nav_gallery).setOnMenuItemClickListener(menuItem ->
@@ -230,7 +219,6 @@ public class NavigationDrawer1 extends AppCompatActivity
             GetDataFromFirebase(false);
             return true;
         });
-
     }
 
 /*    public void editAd(View view)
@@ -344,34 +332,42 @@ public class NavigationDrawer1 extends AppCompatActivity
             // based on the date advertisement should display (order by date) //
 
                 myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
 
-                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                        ClearAll();
+                public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                    ClearAll();
 
-                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                            Messages messages = new Messages();
-                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                            messages.setImageTitle(snapshot.child("title").getValue().toString());
-                            messages.setPrice(snapshot.child("price").getValue().toString());
-                            //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                            messagesList.add(messages);
+                    User_Details user = global.getUser();
+
+                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                        Messages messages = new Messages();
+                        messages.setAdID(snapshot.child("ad_id").getValue().toString());
+                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                        messages.setImageTitle(snapshot.child("title").getValue().toString());
+                        messages.setPrice(snapshot.child("price").getValue().toString());
+                        System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+
+                        if (myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString())) {
+                            continue;
                         }
+
+                        messagesList.add(messages);
+                    }
+
+                    if (myListing) {
+                        myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                        recyclerView.setAdapter(myListingAdapter);
+                        myListingAdapter.notifyDataSetChanged();
+                    } else {
                         recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter);
                         recyclerAdapter.notifyDataSetChanged();
                     }
-
+                }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
-
-
-
-
-
         }
 
     private void GetDataFromFirebase(String text, String categoryItem) {
@@ -410,48 +406,14 @@ public class NavigationDrawer1 extends AppCompatActivity
                     }
                 }
 
-            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                ClearAll();
-
-                User_Details user = global.getUser();
-
-                for(DataSnapshot snapshot:datasnapshot.getChildren()){
-                    Messages messages=new Messages();
-                    messages.setAdID(snapshot.child("ad_id").getValue().toString());
-                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                    messages.setImageTitle(snapshot.child("title").getValue().toString());
-                    messages.setPrice(snapshot.child("price").getValue().toString());
-                    System.out.println("heyyyyyyyyy"+snapshot.child("image_path").getValue().toString() );
-
-                    if(myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
-                    {
-                        continue;
-                    }
-
-                    messagesList.add(messages);
-                }
-
-                if(myListing)
-                {
-                    myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
-                    recyclerView.setAdapter(myListingAdapter);
-                    myListingAdapter.notifyDataSetChanged();
-                }
-
-                else
-                {
-                    recyclerAdapter = new RecyclerAdapter(getApplicationContext(),messagesList);
-                    recyclerView.setAdapter(recyclerAdapter);
-                    recyclerAdapter.notifyDataSetChanged();
-                }
-            }
-
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
             });
+
+
+
 
 
         }
