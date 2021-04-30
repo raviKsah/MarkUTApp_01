@@ -32,12 +32,13 @@ public class MyListingsAdapter extends RecyclerAdapter
 	{
 		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_listings, parent, false);
 
-		view.setOnClickListener((View.OnClickListener) v ->
+		TextView edit = (TextView)view.findViewById(R.id.editAd);
+
+		edit.setOnClickListener((View.OnClickListener) v ->
 		{
-			TextView a = (TextView)v.findViewById(R.id.editAdID);
-			System.out.println(a.getText().toString());
+			TextView id = (TextView)view.findViewById(R.id.editAdID);
 			Intent intent = new Intent(mContext, EditAdvertisement.class);
-			intent.putExtra("adID", a.getText().toString());
+			intent.putExtra("adID", id.getText().toString());
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			mContext.startActivity(intent);
 		});
