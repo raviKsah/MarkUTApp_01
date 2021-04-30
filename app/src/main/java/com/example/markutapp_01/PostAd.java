@@ -79,7 +79,7 @@ public class PostAd extends AppCompatActivity {
 
     public static final String [] PostCategory =
             {
-                  "Electronics", "Furniture", "Books", "Clothing", "Vehicle"
+                    "Apparel","Appliances","Books","Computers", "Electronics", "Home & Garden","Pet Supplies","Sports","Toys & Games", "Vehicle","Other"
             };
 
     @Override
@@ -115,8 +115,8 @@ public class PostAd extends AppCompatActivity {
         PostCategorySpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                category=showCategoryDialogue();
-                System.out.println("heyyyyyyyyyyyy"+category);
+                showCategoryDialogue();
+
 
             }
         });
@@ -137,6 +137,8 @@ public class PostAd extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uploadImage();
+                Intent intent = new Intent(getApplicationContext(), NavigationDrawer1.class);
+                startActivity(intent);
             }
         });
     }
@@ -189,78 +191,6 @@ public class PostAd extends AppCompatActivity {
     // UploadImage method
     private void uploadImage()
     {
-//        if (filePath != null) {
-//
-//            // Code for showing progressDialog while uploading
-//            ProgressDialog progressDialog
-//                    = new ProgressDialog(this);
-//            progressDialog.setTitle("Uploading...");
-//            progressDialog.show();
-//
-//            // Defining the child of storageReference
-//            StorageReference ref
-//                    = storageReference
-//                    .child(
-//                            "images/"
-//                                    + UUID.randomUUID().toString());
-//
-//            // adding listeners on upload
-//            // or failure of image
-//            ref.putFile(filePath)
-//                    .addOnSuccessListener(
-//                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//
-//                                @Override
-//                                public void onSuccess(
-//                                        UploadTask.TaskSnapshot taskSnapshot)
-//                                {
-//
-//                                    // Image uploaded successfully
-//                                    // Dismiss dialog
-//                                    progressDialog.dismiss();
-//                                    Toast
-//                                            .makeText(PostAd.this,
-//                                                    "Image Uploaded!!",
-//                                                    Toast.LENGTH_SHORT)
-//                                            .show();
-//
-//                                    ///////   Here need to store file path to user table database
-//                                }
-//                            })
-//
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e)
-//                        {
-//
-//                            // Error, Image not uploaded
-//                            progressDialog.dismiss();
-//                            Toast
-//                                    .makeText(PostAd.this,
-//                                            "Failed " + e.getMessage(),
-//                                            Toast.LENGTH_SHORT)
-//                                    .show();
-//                        }
-//                    })
-//                    .addOnProgressListener(
-//                            new OnProgressListener<UploadTask.TaskSnapshot>() {
-//
-//                                // Progress Listener for loading
-//                                // percentage on the dialog box
-//                                @Override
-//                                public void onProgress(
-//                                        UploadTask.TaskSnapshot taskSnapshot)
-//                                {
-//                                    double progress
-//                                            = (100.0
-//                                            * taskSnapshot.getBytesTransferred()
-//                                            / taskSnapshot.getTotalByteCount());
-//                                    progressDialog.setMessage(
-//                                            "Uploaded "
-//                                                    + (int)progress + "%");
-//                                }
-//                            });
-//        }
         // Checking whether FilePathUri Is empty or not.
         if (FilePathUri != null) {
 
@@ -362,22 +292,22 @@ public class PostAd extends AppCompatActivity {
     }
 
 
-    private String showCategoryDialogue()
+    private void showCategoryDialogue()
     {
-        final String[] cat = new String[1];
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Product Category").setItems(PostCategory, new DialogInterface.OnClickListener() {
 
             @Override
 
             public void onClick(DialogInterface dialog, int which) {
-                String category = PostCategory[which];
+                category = PostCategory[which];
 
                 PostCategorySpinner.setText(category);
-                cat[0] =PostCategorySpinner.getText().toString();
+
 
             }
         }).show();
-        return cat[0];
+
     }
 }
