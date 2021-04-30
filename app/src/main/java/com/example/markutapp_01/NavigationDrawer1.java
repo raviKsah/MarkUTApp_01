@@ -196,7 +196,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                GetDataFromFirebase();
+                GetDataFromFirebase(false);
             }
         });
 
@@ -334,45 +334,40 @@ public class NavigationDrawer1 extends AppCompatActivity
                 myRef.addValueEventListener(new ValueEventListener() {
 
                 public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                ClearAll();
+                    ClearAll();
 
-                User_Details user = global.getUser();
+                    User_Details user = global.getUser();
 
-                for(DataSnapshot snapshot:datasnapshot.getChildren()){
-                    Messages messages=new Messages();
-                    messages.setAdID(snapshot.child("ad_id").getValue().toString());
-                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                    messages.setImageTitle(snapshot.child("title").getValue().toString());
-                    messages.setPrice(snapshot.child("price").getValue().toString());
-                    System.out.println("heyyyyyyyyy"+snapshot.child("image_path").getValue().toString() );
+                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                        Messages messages = new Messages();
+                        messages.setAdID(snapshot.child("ad_id").getValue().toString());
+                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                        messages.setImageTitle(snapshot.child("title").getValue().toString());
+                        messages.setPrice(snapshot.child("price").getValue().toString());
+                        System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
 
-                    if(myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
-                    {
-                        continue;
+                        if (myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString())) {
+                            continue;
+                        }
+
+                        messagesList.add(messages);
                     }
 
-                    messagesList.add(messages);
-                }
-
-                if(myListing)
-                {
-                    myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
-                    recyclerView.setAdapter(myListingAdapter);
-                    myListingAdapter.notifyDataSetChanged();
-                }
-
-                else
-                {
-                    recyclerAdapter = new RecyclerAdapter(getApplicationContext(),messagesList);
-                    recyclerView.setAdapter(recyclerAdapter);
-                    recyclerAdapter.notifyDataSetChanged();
+                    if (myListing) {
+                        myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                        recyclerView.setAdapter(myListingAdapter);
+                        myListingAdapter.notifyDataSetChanged();
+                    } else {
+                        recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
+                        recyclerView.setAdapter(recyclerAdapter);
+                        recyclerAdapter.notifyDataSetChanged();
+                    }
                 }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
-                });s
-
+                });
         }
 
     private void GetDataFromFirebase(String text, String categoryItem) {
@@ -410,13 +405,15 @@ public class NavigationDrawer1 extends AppCompatActivity
                         recyclerAdapter1.notifyDataSetChanged();
                     }
                 }
-            }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
             });
+
+
+
 
 
         }
