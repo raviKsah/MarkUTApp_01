@@ -68,9 +68,22 @@ public class EditAdvertisement extends AppCompatActivity
 			{
 				if(isChecked)
 				{
+					title.setEnabled(false);
+					desc.setEnabled(false);
+					PostCategorySpinner.setEnabled(false);
+					price.setEnabled(false);
+
 					displayMessage(
 							"WARNING",
 							"If you submit the post with this switch on, the post will be deactivated. It will not appear on the dashboard, and you will not be able to edit it.");
+				}
+
+				else
+				{
+					title.setEnabled(true);
+					desc.setEnabled(true);
+					PostCategorySpinner.setEnabled(true);
+					price.setEnabled(true);
 				}
 
 			}

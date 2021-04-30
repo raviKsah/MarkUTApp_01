@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -133,19 +132,17 @@ public class NavigationDrawer1 extends AppCompatActivity
         });
     }
 
-    public void editAd(View view)
+/*    public void editAd(View view)
     {
         LinearLayout ll = (LinearLayout)findViewById(R.id.adInfoEdit);
 
         TextView v = (TextView)ll.getChildAt(1);
 
-        System.out.println(v.getText().toString());
-
         Intent intent = new Intent(NavigationDrawer1.this, EditAdvertisement.class);
         intent.putExtra("adID", view.getId());
         startActivity(intent);
     }
-
+*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -194,10 +191,8 @@ public class NavigationDrawer1 extends AppCompatActivity
                     messages.setPrice(snapshot.child("price").getValue().toString());
                     System.out.println("heyyyyyyyyy"+snapshot.child("image_path").getValue().toString() );
 
-                    if(!myListing && user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                    if(myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
                     {
-                        System.out.println(user.email_id);
-                        System.out.println(snapshot.child("advertiser").getValue().toString());
                         continue;
                     }
 
