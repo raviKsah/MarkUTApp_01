@@ -39,7 +39,7 @@ public class MyListingsAdapter extends RecyclerAdapter
 			TextView id = (TextView)view.findViewById(R.id.editAdID);
 			Intent intent = new Intent(mContext, EditAdvertisement.class);
 			intent.putExtra("adID", id.getText().toString());
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			mContext.startActivity(intent);
 		});
 
