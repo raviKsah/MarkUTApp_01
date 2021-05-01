@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -45,7 +46,7 @@ public class NavigationDrawer1 extends AppCompatActivity
     ImageButton report_btn_logo;
     String items;
     private AppBarConfiguration mAppBarConfiguration;
-
+    private DrawerLayout drawer;
     String category;
     private Globals global = Globals.getInstance();
 
@@ -108,7 +109,8 @@ public class NavigationDrawer1 extends AppCompatActivity
 //                        .setAction("Action", null).show();
             }
         });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
+
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         View headerView = navigationView.getHeaderView(0);
@@ -154,6 +156,7 @@ public class NavigationDrawer1 extends AppCompatActivity
         {
             Intent intent = new Intent(getApplicationContext(), PostAd.class);
             startActivity(intent);
+            closeDrawer();
             return true;
         });
 
@@ -241,6 +244,7 @@ public class NavigationDrawer1 extends AppCompatActivity
             fab.setVisibility(View.GONE);
             GetDataFromFirebase(true);
             headerEmail.setText("Your Listings");
+            closeDrawer();
             return true;
         });
 
@@ -253,11 +257,16 @@ public class NavigationDrawer1 extends AppCompatActivity
 
             GetDataFromFirebase(false);
             headerEmail.setText("Dashboard");
+            closeDrawer();
             return true;
         });
     }
 
-
+    public void closeDrawer() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+    }
 /*    public void editAd(View view)
     {
         LinearLayout ll = (LinearLayout)findViewById(R.id.adInfoEdit);
@@ -327,6 +336,13 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                         messages.setImageTitle(snapshot.child("title").getValue().toString());
                         messages.setPrice(snapshot.child("price").getValue().toString());
+                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+
+
+                        ////Fvrt button
+
+
+
                         //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                         messagesList.add(messages);
                     }
