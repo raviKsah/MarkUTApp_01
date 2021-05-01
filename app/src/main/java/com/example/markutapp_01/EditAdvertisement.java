@@ -109,7 +109,7 @@ public class EditAdvertisement extends AppCompatActivity
 
 						title.setText(datas.child("title").getValue().toString());
 						desc.setText(datas.child("description").getValue().toString());
-//						category = datas.child("category").getValue().toString();
+						category = datas.child("category").getValue().toString();
 						price.setText(datas.child("price").getValue().toString());
 
 						break;

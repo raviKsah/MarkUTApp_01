@@ -3,6 +3,7 @@ package com.example.markutapp_01;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -73,7 +74,7 @@ public class NavigationDrawer1 extends AppCompatActivity
         FloatingActionButton fab = findViewById(R.id.sell);
         ImageButton report_btn = findViewById(R.id.report_btn_logo);
 
-
+/*
         report_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,7 +83,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
             }
         });
-
+*/
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -273,6 +274,18 @@ public class NavigationDrawer1 extends AppCompatActivity
 
     @Override
     public boolean onSupportNavigateUp() {
+        User_Details user = global.getUser();
+
+        if(user.type.toLowerCase().equals("admin"))
+        {
+            NavigationView navigationView = findViewById(R.id.nav_view);
+
+            MenuItem sell = navigationView.getMenu().findItem(R.id.sell);
+            MenuItem myListings = navigationView.getMenu().findItem(R.id.nav_gallery);
+
+            sell.setVisible(false);
+            myListings.setVisible(false);
+        }
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
