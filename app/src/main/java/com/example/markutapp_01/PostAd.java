@@ -150,6 +150,7 @@ public class PostAd extends AppCompatActivity {
                     description.setEnabled(false);
                     PostCategorySpinner.setEnabled(false);
                     price.setEnabled(false);
+                    btnSelect.setEnabled(false);
 
                     displayMessage(
                             "WARNING",
@@ -162,6 +163,7 @@ public class PostAd extends AppCompatActivity {
                     description.setEnabled(true);
                     PostCategorySpinner.setEnabled(true);
                     price.setEnabled(true);
+                    btnSelect.setEnabled(true);
                 }
 
             }
@@ -180,29 +182,21 @@ public class PostAd extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if(isEditPage)
+                if(uploadImage())
                 {
-                    editAd();
-
                     Intent intent = new Intent(getApplicationContext(), NavigationDrawer1.class);
                     startActivity(intent);
-                }
-
-                else
-                {
-                    if(uploadImage())
-                    {
-                        Intent intent = new Intent(getApplicationContext(), NavigationDrawer1.class);
-                        startActivity(intent);
-                    }
                 }
             }
         });
 
         if(isEditPage)
         {
+            String newTitle = "Edit Advertisement";
             getAdDetails();
-            postAdd.setText("Edit Advertisement");
+            TextView adTitle = (TextView)findViewById(R.id.postAdTitle);
+            adTitle.setText(newTitle);
+            postAdd.setText(newTitle);
             deactivate.setVisibility(View.VISIBLE);
         }
     }
@@ -314,21 +308,18 @@ public class PostAd extends AppCompatActivity {
         }
     }
 
-    private void editAd()
+    private void editAd(String url)
     {
         Globals global = Globals.getInstance();
         User_Details user = global.getUser();
 
-//        url = uri.toString();
-
-        databaseReference.orderByChild("ad_id").equalTo(adID).addValueEventListener(new ValueEventListener()
+        databaseReference.orderByChild("ad_id").equalTo(adID).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
             {
                 for(DataSnapshot datas : snapshot.getChildren())
                 {
-                    /*
                     if(deactivate.isChecked())
                     {
                         datas.child("is_complete").getRef().setValue(true);
@@ -345,8 +336,9 @@ public class PostAd extends AppCompatActivity {
                         datas.child("editor").getRef().setValue(user.email_id);
                         datas.child("price").getRef().setValue(price.getText().toString());
                         datas.child("title").getRef().setValue(title.getText().toString());
+                        datas.child("image_path").getRef().setValue(url);
                         datas.child("was_edited").getRef().setValue(true);
-                    }*/
+                    }
                 }
             }
 
@@ -386,35 +378,42 @@ public class PostAd extends AppCompatActivity {
                                 public void onSuccess(Uri uri) {
                                     url = uri.toString();
 
+                                    if(isEditPage)
+                                    {
+                                        editAd(url);
+                                    }
 
-                                    // Getting image name from EditText and store into string variable.
-                                    String postTitle = title.getText().toString().trim();
-                                    String postDesc = description.getText().toString().trim();
-                                    String cost = price.getText().toString().trim();
-                                    String createdDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-                                    String creator = session.getusename();
-                                    String editedDate = "";
-                                    Boolean isComplete = false;
-                                    Boolean underReport = false;
-                                    Boolean wasEdited = false;
-                                    String editor = "";
-                                    String dateCompleted = "";
-
-
-                                    // Hiding the progressDialog after done uploading.
-                                    progressDialog.dismiss();
-
-                                    // Showing toast message after done uploading.
-                                    Toast.makeText(getApplicationContext(), "Image Uploaded Successfully ", Toast.LENGTH_LONG).show();
-                                    String ImageUploadId = databaseReference.push().getKey();
-                                    @SuppressWarnings("VisibleForTests")
-                                    PostDetails imageUploadInfo = new PostDetails(ImageUploadId, creator, category, dateCompleted, createdDate, postDesc, editedDate, editor, url , cost, postTitle, isComplete, underReport, wasEdited);
-                                    //String ad_id, String advertiser, String category, String date_completed, String date_created, String description, String edited_date, String editor, String image_path, String price, String title, Boolean is_complete, Boolean under_report, Boolean was_edited
-                                    // Getting image upload ID.
+                                    else
+                                    {
+                                        // Getting image name from EditText and store into string variable.
+                                        String postTitle = title.getText().toString().trim();
+                                        String postDesc = description.getText().toString().trim();
+                                        String cost = price.getText().toString().trim();
+                                        String createdDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                        String creator = session.getusename();
+                                        String editedDate = "";
+                                        Boolean isComplete = false;
+                                        Boolean underReport = false;
+                                        Boolean wasEdited = false;
+                                        String editor = "";
+                                        String dateCompleted = "";
 
 
-                                    // Adding image upload id s child element into databaseReference.
-                                    databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
+                                        // Hiding the progressDialog after done uploading.
+                                        progressDialog.dismiss();
+
+                                        // Showing toast message after done uploading.
+                                        Toast.makeText(getApplicationContext(), "Image Uploaded Successfully ", Toast.LENGTH_LONG).show();
+                                        String ImageUploadId = databaseReference.push().getKey();
+                                        @SuppressWarnings("VisibleForTests")
+                                        PostDetails imageUploadInfo = new PostDetails(ImageUploadId, creator, category, dateCompleted, createdDate, postDesc, editedDate, editor, url, cost, postTitle, isComplete, underReport, wasEdited);
+                                        //String ad_id, String advertiser, String category, String date_completed, String date_created, String description, String edited_date, String editor, String image_path, String price, String title, Boolean is_complete, Boolean under_report, Boolean was_edited
+                                        // Getting image upload ID.
+
+
+                                        // Adding image upload id s child element into databaseReference.
+                                        databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
+                                    }
                                 }
                             });
                         }

@@ -92,7 +92,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
         User_Details user = global.getUser();
 
-        if(user.getType().toLowerCase().equals("admin"))
+        if(user.type.toLowerCase().equals("admin"))
         {
             fab.setVisibility(View.GONE);
         }
@@ -149,6 +149,7 @@ public class NavigationDrawer1 extends AppCompatActivity
             Intent intent = new Intent(NavigationDrawer1.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            closeDrawer();
             return true;
         });
 
@@ -267,17 +268,6 @@ public class NavigationDrawer1 extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         }
     }
-/*    public void editAd(View view)
-    {
-        LinearLayout ll = (LinearLayout)findViewById(R.id.adInfoEdit);
-
-        TextView v = (TextView)ll.getChildAt(1);
-
-        Intent intent = new Intent(NavigationDrawer1.this, EditAdvertisement.class);
-        intent.putExtra("adID", view.getId());
-        startActivity(intent);
-    }
-*/
 
     @Override
     public void onBackPressed() {
