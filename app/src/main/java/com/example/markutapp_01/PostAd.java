@@ -11,6 +11,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
@@ -25,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.markutapp_01.R;
 import com.google.android.gms.common.internal.Constants;
@@ -46,8 +49,8 @@ import java.util.UUID;
 public class PostAd extends AppCompatActivity {
 
     // views for button
-    private ImageView btnUpload;
-    private ImageView btnSelect;
+
+    private Button btnSelect;
     private TextView PostCategorySpinner;
     Button postAdd;
     String url;
@@ -87,10 +90,13 @@ public class PostAd extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_ad1);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         databaseReference = FirebaseDatabase.getInstance().getReference(Database_Path);
         progressDialog = new ProgressDialog(PostAd.this);
 
-        btnSelect = findViewById(R.id.SelectImage);
+        btnSelect = findViewById(R.id.upload_image_btn);
         //btnUpload = findViewById(R.id.SelectImage);
         imageView = findViewById(R.id.SelectImage);
         PostCategorySpinner = findViewById(R.id.PostCategorySpinner);
@@ -141,6 +147,22 @@ public class PostAd extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
     }
 
     // Select Image method

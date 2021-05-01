@@ -3,9 +3,11 @@ package com.example.markutapp_01;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -40,10 +43,10 @@ public class NavigationDrawer1 extends AppCompatActivity
     DatabaseReference firebaseAuth;
 
     String searchValue;
-
+    ImageButton report_btn_logo;
     String items;
     private AppBarConfiguration mAppBarConfiguration;
-
+    private DrawerLayout drawer;
     String category;
     private Globals global = Globals.getInstance();
 
@@ -68,9 +71,22 @@ public class NavigationDrawer1 extends AppCompatActivity
         setSupportActionBar(toolbar);
         categoryList = (Spinner) findViewById(R.id.searchCategories);
 
-        firebaseAuth = FirebaseDatabase.getInstance().getReference("Advertisements");
+//        firebaseAuth = FirebaseDatabase.getInstance().getReference("Advertisements");
 
         FloatingActionButton fab = findViewById(R.id.sell);
+        ImageButton report_btn = findViewById(R.id.report_btn_logo);
+
+/*
+        report_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                reportChecker("");
+
+            }
+        });
+*/
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,7 +99,8 @@ public class NavigationDrawer1 extends AppCompatActivity
 //                        .setAction("Action", null).show();
             }
         });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
+
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         View headerView = navigationView.getHeaderView(0);
@@ -126,6 +143,16 @@ public class NavigationDrawer1 extends AppCompatActivity
             startActivity(intent);
             return true;
         });
+
+        navigationView.getMenu().findItem(R.id.sell).setOnMenuItemClickListener(menuItem ->
+        {
+            Intent intent = new Intent(getApplicationContext(), PostAd.class);
+            startActivity(intent);
+            closeDrawer();
+            return true;
+        });
+
+
 
         recyclerView=findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -244,6 +271,7 @@ public class NavigationDrawer1 extends AppCompatActivity
             fab.setVisibility(View.GONE);
             currentPage="MyListings";
             GetDataFromFirebase(true);
+            closeDrawer();
             return true;
         });
 
@@ -252,10 +280,16 @@ public class NavigationDrawer1 extends AppCompatActivity
             fab.setVisibility(View.VISIBLE);
             currentPage="Dashboard";
             GetDataFromFirebase(false);
+            closeDrawer();
             return true;
         });
     }
 
+    public void closeDrawer() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+    }
 /*    public void editAd(View view)
     {
         LinearLayout ll = (LinearLayout)findViewById(R.id.adInfoEdit);
@@ -267,6 +301,12 @@ public class NavigationDrawer1 extends AppCompatActivity
         startActivity(intent);
     }
 */
+
+    @Override
+    public void onBackPressed() {
+        // Do Here what ever you want do on back press;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -278,6 +318,18 @@ public class NavigationDrawer1 extends AppCompatActivity
 
     @Override
     public boolean onSupportNavigateUp() {
+        User_Details user = global.getUser();
+
+        if(user.type.toLowerCase().equals("admin"))
+        {
+            NavigationView navigationView = findViewById(R.id.nav_view);
+
+            MenuItem sell = navigationView.getMenu().findItem(R.id.sell);
+            MenuItem myListings = navigationView.getMenu().findItem(R.id.nav_gallery);
+
+            sell.setVisible(false);
+            myListings.setVisible(false);
+        }
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
@@ -320,18 +372,21 @@ public class NavigationDrawer1 extends AppCompatActivity
                 myRef.orderByChild("category").equalTo(categorySelected).addValueEventListener(new ValueEventListener() {
                     @Override
 
-                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                        ClearAll();
+                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                        Messages messages = new Messages();
+                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                        messages.setImageTitle(snapshot.child("title").getValue().toString());
+                        messages.setPrice(snapshot.child("price").getValue().toString());
+                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
-                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                            Messages messages = new Messages();
-                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                            messages.setImageTitle(snapshot.child("title").getValue().toString());
-                            messages.setPrice(snapshot.child("price").getValue().toString());
-                            //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                            messagesList.add(messages);
-                        }
-                        recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
+
+                        ////Fvrt button
+
+
+
+                        //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                        messagesList.add(messages);
+                         recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter);
                         recyclerAdapter.notifyDataSetChanged();
                     }
@@ -429,29 +484,19 @@ public class NavigationDrawer1 extends AppCompatActivity
 
     }
 
+    private void GetDataFromFirebase(boolean myListing)
+    {
+            myRef.addValueEventListener(new ValueEventListener()
+            {
 
-
-
-
-    private void GetDataFromFirebase(boolean myListing) {
-        //Query query=myRef.child();
-        System.out.println(myRef);
-
-
-            // searchValue = ""
-
-            //Divya Krishna will fetch values based on search value
-
-            // based on the date advertisement should display (order by date) //
-
-                myRef.addValueEventListener(new ValueEventListener() {
-
-                public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                public void onDataChange(@NonNull DataSnapshot datasnapshot)
+                {
                     ClearAll();
 
                     User_Details user = global.getUser();
 
-                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                    for (DataSnapshot snapshot : datasnapshot.getChildren())
+                    {
                         Messages messages = new Messages();
                         messages.setAdID(snapshot.child("ad_id").getValue().toString());
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
@@ -459,28 +504,35 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setPrice(snapshot.child("price").getValue().toString());
                         System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
 
-                        if (myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString())) {
+                        if (myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                        {
                             continue;
                         }
 
                         messagesList.add(messages);
                     }
 
-                    if (myListing) {
+                    if (myListing)
+                    {
                         myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(myListingAdapter);
                         myListingAdapter.notifyDataSetChanged();
-                    } else {
+                    }
+
+                    else
+                     {
                         recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter);
                         recyclerAdapter.notifyDataSetChanged();
-                    }
+                     }
                 }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error)
+                {
+
+                }
+            });
         }
 
     private void GetDataFromFirebase(boolean list,String text, String categoryItem) {
@@ -747,7 +799,32 @@ public class NavigationDrawer1 extends AppCompatActivity
 
 
 
+    public void reportChecker(final String postkey) {
 
+//        myRef = database.getReference("under_report");
+//        myRef.orderByChild("under_report");
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+     //      final String uid = user.getUid();
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.child(postkey).hasChild("")){
+                    report_btn_logo.setImageResource(R.drawable.ic_baseline_flag_24);
+                }else {
+                    report_btn_logo.setImageResource(R.drawable.ic_baseline_outlined_flag_24);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
 
 

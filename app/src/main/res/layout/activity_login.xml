@@ -47,8 +47,8 @@
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
                         android:paddingStart="5dp"
-                        android:singleLine="true"
-                        android:paddingLeft="5dp" />
+                        android:paddingLeft="5dp"
+                        android:singleLine="true" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,8 +68,8 @@
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:paddingStart="5dp"
-                        android:singleLine="true"
-                        android:paddingLeft="5dp" />
+                        android:paddingLeft="5dp"
+                        android:singleLine="true" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

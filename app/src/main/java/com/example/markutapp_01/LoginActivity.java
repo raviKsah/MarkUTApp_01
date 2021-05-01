@@ -140,9 +140,18 @@ public class LoginActivity extends AppCompatActivity {
                     email_id = datas.child("email_id").getValue().toString();
                     contact = datas.child("contact").getValue().toString();
                     type = datas.child("type").getValue().toString();
-                    security_question = datas.child("security_question").getValue().toString();
-                    security_answer = datas.child("security_answer").getValue().toString();
 
+                    if(type.toLowerCase().equals("admin"))
+                    {
+                        security_question = "";
+                        security_answer = "";
+                    }
+
+                    else
+                    {
+                        security_question = datas.child("security_question").getValue().toString();
+                        security_answer = datas.child("security_answer").getValue().toString();
+                    }
                 }
                 if (getPassword.equals(user_password)) {
 
