@@ -5,34 +5,31 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.ImageDecoder;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.markutapp_01.R;
-import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -42,7 +39,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.UUID;
 
 public class PostAd extends AppCompatActivity {
 
@@ -52,6 +48,7 @@ public class PostAd extends AppCompatActivity {
     private TextView PostCategorySpinner;
     Button postAdd;
     String url;
+    String adID = "";
 
     // view for image view
     private ImageView imageView;
@@ -78,6 +75,11 @@ public class PostAd extends AppCompatActivity {
     String category;
     ProgressDialog progressDialog ;
 
+    Switch deactivate = null;
+
+    Intent intent = null;
+    boolean isEditPage = false;
+
     public static final String [] PostCategory =
             {
                     "Apparel","Appliances","Books","Computers", "Electronics", "Home & Garden","Pet Supplies","Sports","Toys & Games", "Vehicle","Other"
@@ -87,6 +89,12 @@ public class PostAd extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        intent = getIntent();
+        adID = intent.getStringExtra("adID");
+
+        isEditPage = intent.getBooleanExtra("editAd", false);
+
         setContentView(R.layout.activity_post_ad1);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -107,6 +115,8 @@ public class PostAd extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
+        deactivate = (Switch)findViewById(R.id.deactivate);
+
         // on pressing btnSelect SelectImage() is called
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,13 +135,41 @@ public class PostAd extends AppCompatActivity {
             }
         });
 
+        deactivate.setVisibility(View.GONE);
 
+        deactivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if(isChecked)
+                {
+                    title.setEnabled(false);
+                    description.setEnabled(false);
+                    PostCategorySpinner.setEnabled(false);
+                    price.setEnabled(false);
+
+                    displayMessage(
+                            "WARNING",
+                            "If you submit the post with this switch on, the post will be deactivated. It will not appear on the dashboard, and you will not be able to edit it.");
+                }
+
+                else
+                {
+                    title.setEnabled(true);
+                    description.setEnabled(true);
+                    PostCategorySpinner.setEnabled(true);
+                    price.setEnabled(true);
+                }
+
+            }
+        });
 
         // on pressing btnUpload uploadImage() is called
 //        btnUpload.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v)
-//            {
+//            {+
 //                uploadImage();
 //            }
 //        });
@@ -140,12 +178,74 @@ public class PostAd extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                uploadImage();
-                Intent intent = new Intent(getApplicationContext(), NavigationDrawer1.class);
-                startActivity(intent);
+                if(isEditPage)
+                {
+                    //editAd();
+                }
+                boolean success = uploadImage();
+
+                if(success)
+                {
+                    Intent intent = new Intent(getApplicationContext(), NavigationDrawer1.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        if(isEditPage)
+        {
+            getAdDetails();
+            postAdd.setText("Edit Advertisement");
+            deactivate.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void getAdDetails()
+    {
+        databaseReference.orderByChild("date_created").addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                for (DataSnapshot datas : dataSnapshot.getChildren())
+                {
+                    if(datas.child("ad_id").getValue().toString().equals(adID))
+                    {
+                        title.setText(datas.child("title").getValue().toString());
+                        description.setText(datas.child("description").getValue().toString());
+                        PostCategorySpinner.setText(datas.child("category").getValue().toString());
+                        price.setText(datas.child("price").getValue().toString());
+
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error)
+            {
+                return;
             }
         });
     }
+
+    public void displayMessage(String title, String message)
+    {
+        android.app.AlertDialog alert = new android.app.AlertDialog.Builder(PostAd.this).create();
+        alert.setTitle(title);
+        alert.setMessage(message);
+        alert.setButton(android.app.AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                    }
+                });
+
+        alert.show();
+    }
+
 
     // Select Image method
     private void SelectImage()
@@ -192,8 +292,156 @@ public class PostAd extends AppCompatActivity {
         }
     }
 
+/*    private void editAd()
+    {
+        DatabaseReference thisAd = databaseReference.child(adID);
+        Globals global = Globals.getInstance();
+        User_Details user = global.getUser();
+
+        thisAd.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
+                snapshot
+                Map<String, PostDetails> adDetails = new HashMap<>();
+                adDetails.put(adID, new PostDetails(
+                        adID, snapshot.child("advertiser").getValue().toString(), category,
+                        "", snapshot.child("date_created").getValue().toString(),
+                        description.getText().toString(), new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()),
+                        user.email_id, snapshot.child("image_path").getValue().toString(), price.getText().toString(), title.getText().toString(),
+                        false, Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()), true));
+
+                thisAd.setValueAsync(adDetails);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error)
+            {
+
+            }
+        });
+
+        thisAd.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
+                for(DataSnapshot data : snapshot.getChildren())
+                {
+                    data.child("is_complete")
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error)
+            {
+
+            }
+        })
+        if(deactivate.isChecked())
+        {
+            thisAd.child("is_complete").setValue(true);
+            thisAd.child("date_completed").setValue(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
+        }
+
+        else
+        {
+            thisAd.child("category").setValue(category);
+            thisAd.child("date_created").setValue(databaseReference.child(thisAd.child("date_created").ToString()));
+        }
+        // Checking whether FilePathUri Is empty or not.
+        if (FilePathUri != null)
+        {
+            // Setting progressDialog Title.
+            progressDialog.setTitle("Changes are being applied...");
+
+            // Showing progressDialog.
+            progressDialog.show();
+
+            // Creating second StorageReference.
+            StorageReference storageReference2nd = storageReference.child(Storage_Path + System.currentTimeMillis() + "." + GetFileExtension(FilePathUri));
+
+            // Adding addOnSuccessListener to second StorageReference.
+            storageReference2nd.putFile(FilePathUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
+                    {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                        {
+
+                            storageReference2nd.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+                            {
+                                @Override
+                                public void onSuccess(Uri uri)
+                                {
+                                    url = uri.toString();
+
+                                    // Getting image name from EditText and store into string variable.
+                                    String postTitle = title.getText().toString().trim();
+                                    String postDesc = description.getText().toString().trim();
+                                    String cost = price.getText().toString().trim();
+                                    String createdDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                    String creator = session.getusename();
+                                    String editedDate = "";
+                                    Boolean isComplete = false;
+                                    Boolean underReport = false;
+                                    Boolean wasEdited = false;
+                                    String editor = "";
+                                    String dateCompleted = "";
+
+                                    // Hiding the progressDialog after done uploading.
+                                    progressDialog.dismiss();
+
+                                    // Showing toast message after done uploading.
+                                    Toast.makeText(getApplicationContext(), "Image Uploaded Successfully ", Toast.LENGTH_LONG).show();
+                                    String ImageUploadId = databaseReference.push().getKey();
+                                    @SuppressWarnings("VisibleForTests")
+                                    PostDetails imageUploadInfo = new PostDetails(ImageUploadId, creator, category, dateCompleted, createdDate, postDesc, editedDate, editor, url , cost, postTitle, isComplete, underReport, wasEdited);
+                                    //String ad_id, String advertiser, String category, String date_completed, String date_created, String description, String edited_date, String editor, String image_path, String price, String title, Boolean is_complete, Boolean under_report, Boolean was_edited
+                                    // Getting image upload ID.
+
+                                    // Adding image upload id s child element into databaseReference.
+                                    databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
+                                }
+                            });
+                        }
+                    })
+                    // If something goes wrong .
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+
+                            // Hiding the progressDialog.
+                            progressDialog.dismiss();
+
+                            // Showing exception erro message.
+                            Toast.makeText(PostAd.this, exception.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    })
+
+                    // On progress change upload time.
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>()
+                    {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot)
+                        {
+
+                            // Setting progressDialog Title.
+                            progressDialog.setTitle("Image is Uploading...");
+                        }
+                    });
+        }
+
+        else
+        {
+            Toast.makeText(PostAd.this, "Please Select Image or Add Image Name", Toast.LENGTH_LONG).show();
+        }
+    }*/
+
+
     // UploadImage method
-    private void uploadImage()
+    private boolean uploadImage()
     {
         // Checking whether FilePathUri Is empty or not.
         if (FilePathUri != null) {
@@ -275,11 +523,12 @@ public class PostAd extends AppCompatActivity {
 
                         }
                     });
+
+            return true;
         }
         else {
-
             Toast.makeText(PostAd.this, "Please Select Image or Add Image Name", Toast.LENGTH_LONG).show();
-
+            return false;
         }
     }
 
