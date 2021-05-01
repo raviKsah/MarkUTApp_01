@@ -140,6 +140,15 @@ public class NavigationDrawer1 extends AppCompatActivity
             return true;
         });
 
+        navigationView.getMenu().findItem(R.id.sell).setOnMenuItemClickListener(menuItem ->
+        {
+            Intent intent = new Intent(getApplicationContext(), PostAd.class);
+            startActivity(intent);
+            return true;
+        });
+
+
+
         recyclerView=findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -235,6 +244,7 @@ public class NavigationDrawer1 extends AppCompatActivity
         });
     }
 
+
 /*    public void editAd(View view)
     {
         LinearLayout ll = (LinearLayout)findViewById(R.id.adInfoEdit);
@@ -251,6 +261,7 @@ public class NavigationDrawer1 extends AppCompatActivity
     public void onBackPressed() {
         // Do Here what ever you want do on back press;
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -335,29 +346,19 @@ public class NavigationDrawer1 extends AppCompatActivity
 
     }
 
+    private void GetDataFromFirebase(boolean myListing)
+    {
+            myRef.addValueEventListener(new ValueEventListener()
+            {
 
-
-
-
-    private void GetDataFromFirebase(boolean myListing) {
-        //Query query=myRef.child();
-        System.out.println(myRef);
-
-
-            // searchValue = ""
-
-            //Divya Krishna will fetch values based on search value
-
-            // based on the date advertisement should display (order by date) //
-
-                myRef.addValueEventListener(new ValueEventListener() {
-
-                public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                public void onDataChange(@NonNull DataSnapshot datasnapshot)
+                {
                     ClearAll();
 
                     User_Details user = global.getUser();
 
-                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                    for (DataSnapshot snapshot : datasnapshot.getChildren())
+                    {
                         Messages messages = new Messages();
                         messages.setAdID(snapshot.child("ad_id").getValue().toString());
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
@@ -365,28 +366,35 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setPrice(snapshot.child("price").getValue().toString());
                         System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
 
-                        if (myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString())) {
+                        if (myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                        {
                             continue;
                         }
 
                         messagesList.add(messages);
                     }
 
-                    if (myListing) {
+                    if (myListing)
+                    {
                         myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(myListingAdapter);
                         myListingAdapter.notifyDataSetChanged();
-                    } else {
+                    }
+
+                    else
+                     {
                         recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter);
                         recyclerAdapter.notifyDataSetChanged();
-                    }
+                     }
                 }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error)
+                {
+
+                }
+            });
         }
 
     private void GetDataFromFirebase(String text, String categoryItem) {
