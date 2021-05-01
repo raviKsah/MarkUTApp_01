@@ -46,7 +46,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
-        TextView textView,price;
+        TextView textView,price,edit;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -54,6 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
             imageView=itemView.findViewById(R.id.iv_que_item);
             textView = itemView.findViewById(R.id.ad_title);
             price = itemView.findViewById(R.id.ad_price);
+            edit = itemView.findViewById(R.id.editAdID);
         }
     }
 

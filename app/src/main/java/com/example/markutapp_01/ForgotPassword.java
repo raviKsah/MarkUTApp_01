@@ -9,10 +9,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ForgotPassword extends AppCompatActivity
 {
@@ -21,31 +28,46 @@ public class ForgotPassword extends AppCompatActivity
     Button proceed;
     Session session;
     Context cntx;
+    DatabaseReference firebaseAuth;
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         session = new Session(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgotpassword);
-
-        emailID=(EditText)findViewById(R.id.email);
-        emailError=(TextInputLayout)findViewById(R.id.emailError);
-        proceed =(Button) findViewById(R.id.forgotpwdproceed);
+        firebaseAuth = FirebaseDatabase.getInstance().getReference("User_Details");
+        emailID = (EditText) findViewById(R.id.email);
+        emailError = (TextInputLayout) findViewById(R.id.emailError);
+        proceed = (Button) findViewById(R.id.forgotpwdproceed);
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String sec_email=emailID.getText().toString();
-                System.out.println("heloooooooo" +sec_email);
+                String sec_email = emailID.getText().toString();
+                System.out.println("heloooooooo" + sec_email);
                 session.setSecUserEmail(sec_email);
-                if(isEmailCorrect()) {
-                    Intent intent = new Intent(getApplicationContext(), ValidateSecurityQuestions.class);
-                    startActivity(intent);
+                if (isEmailCorrect()) {
+                    firebaseAuth.orderByChild("email_id").equalTo(sec_email).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                Intent intent = new Intent(getApplicationContext(), ValidateSecurityQuestions.class);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(ForgotPassword.this, "Email doesn't Exits", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
+
+
             }
         });
     }
-
-
 
     public boolean isEmailCorrect()
     {
@@ -72,4 +94,5 @@ public class ForgotPassword extends AppCompatActivity
 
         return isEmailValid;
     }
+
 }
