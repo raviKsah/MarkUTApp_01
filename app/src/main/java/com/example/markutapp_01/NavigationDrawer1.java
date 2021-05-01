@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ public class NavigationDrawer1 extends AppCompatActivity
     DatabaseReference firebaseAuth;
 
     String searchValue;
-
+    ImageButton report_btn_logo;
     String items;
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -67,9 +68,22 @@ public class NavigationDrawer1 extends AppCompatActivity
         setSupportActionBar(toolbar);
         categoryList = (Spinner) findViewById(R.id.searchCategories);
 
-        firebaseAuth = FirebaseDatabase.getInstance().getReference("Advertisements");
+//        firebaseAuth = FirebaseDatabase.getInstance().getReference("Advertisements");
 
         FloatingActionButton fab = findViewById(R.id.sell);
+        ImageButton report_btn = findViewById(R.id.report_btn_logo);
+
+
+        report_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                reportChecker("");
+
+            }
+        });
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -232,6 +246,11 @@ public class NavigationDrawer1 extends AppCompatActivity
         startActivity(intent);
     }
 */
+
+    @Override
+    public void onBackPressed() {
+        // Do Here what ever you want do on back press;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -451,7 +470,32 @@ public class NavigationDrawer1 extends AppCompatActivity
 
 
 
+    public void reportChecker(final String postkey) {
 
+//        myRef = database.getReference("under_report");
+//        myRef.orderByChild("under_report");
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+     //      final String uid = user.getUid();
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.child(postkey).hasChild("")){
+                    report_btn_logo.setImageResource(R.drawable.ic_baseline_flag_24);
+                }else {
+                    report_btn_logo.setImageResource(R.drawable.ic_baseline_outlined_flag_24);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
 
 

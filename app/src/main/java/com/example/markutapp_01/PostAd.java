@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.markutapp_01.R;
 import com.google.android.gms.common.internal.Constants;
@@ -87,6 +88,9 @@ public class PostAd extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_ad1);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         databaseReference = FirebaseDatabase.getInstance().getReference(Database_Path);
         progressDialog = new ProgressDialog(PostAd.this);
 

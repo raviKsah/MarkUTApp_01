@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_baseline_outlined_flag_24"
                     android:background="@android:color/transparent"
-                    android:id="@+id/fvrt_f2_item"
+                    android:id="@+id/report_btn_logo"
                     android:padding="5dp"/>
 
 
