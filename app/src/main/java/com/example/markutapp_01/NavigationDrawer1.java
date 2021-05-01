@@ -91,7 +91,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
         User_Details user = global.getUser();
 
-        if(user.type.toLowerCase().equals("admin"))
+        if(user.getType().toLowerCase().equals("admin"))
         {
             fab.setVisibility(View.GONE);
         }
@@ -391,9 +391,9 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setPrice(snapshot.child("price").getValue().toString());
 
                         if ((myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
-                            || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString())))
+                            || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
+                            || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
                         {
-                            System.out.println("Test");
                             continue;
                         }
 

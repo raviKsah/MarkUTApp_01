@@ -72,7 +72,7 @@ public class PostAd extends AppCompatActivity {
     EditText title;
     EditText description,price;
     DatabaseReference databaseReference;
-    String category;
+    String category = "";
     ProgressDialog progressDialog ;
 
     Switch deactivate = null;
@@ -180,14 +180,19 @@ public class PostAd extends AppCompatActivity {
             public void onClick(View v) {
                 if(isEditPage)
                 {
-                    //editAd();
-                }
-                boolean success = uploadImage();
+                    editAd();
 
-                if(success)
-                {
                     Intent intent = new Intent(getApplicationContext(), NavigationDrawer1.class);
                     startActivity(intent);
+                }
+
+                else
+                {
+                    if(uploadImage())
+                    {
+                        Intent intent = new Intent(getApplicationContext(), NavigationDrawer1.class);
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -292,44 +297,39 @@ public class PostAd extends AppCompatActivity {
         }
     }
 
-/*    private void editAd()
+    private void editAd()
     {
-        DatabaseReference thisAd = databaseReference.child(adID);
         Globals global = Globals.getInstance();
         User_Details user = global.getUser();
 
-        thisAd.addValueEventListener(new ValueEventListener()
+//        url = uri.toString();
+
+        databaseReference.orderByChild("ad_id").equalTo(adID).addValueEventListener(new ValueEventListener()
         {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
             {
-                snapshot
-                Map<String, PostDetails> adDetails = new HashMap<>();
-                adDetails.put(adID, new PostDetails(
-                        adID, snapshot.child("advertiser").getValue().toString(), category,
-                        "", snapshot.child("date_created").getValue().toString(),
-                        description.getText().toString(), new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()),
-                        user.email_id, snapshot.child("image_path").getValue().toString(), price.getText().toString(), title.getText().toString(),
-                        false, Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()), true));
-
-                thisAd.setValueAsync(adDetails);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error)
-            {
-
-            }
-        });
-
-        thisAd.addValueEventListener(new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot)
-            {
-                for(DataSnapshot data : snapshot.getChildren())
+                for(DataSnapshot datas : snapshot.getChildren())
                 {
-                    data.child("is_complete")
+                    /*
+                    if(deactivate.isChecked())
+                    {
+                        datas.child("is_complete").getRef().setValue(true);
+                        datas.child("date_completed").getRef().setValue(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
+                        datas.child("edit_date").getRef().setValue(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
+                        datas.child("was_edited").getRef().setValue(true);
+                    }
+
+                    else
+                    {
+                        datas.child("category").getRef().setValue(PostCategorySpinner.getText().toString());
+                        datas.child("description").getRef().setValue(description.getText().toString());
+                        datas.child("edit_date").getRef().setValue(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
+                        datas.child("editor").getRef().setValue(user.email_id);
+                        datas.child("price").getRef().setValue(price.getText().toString());
+                        datas.child("title").getRef().setValue(title.getText().toString());
+                        datas.child("was_edited").getRef().setValue(true);
+                    }*/
                 }
             }
 
@@ -338,106 +338,8 @@ public class PostAd extends AppCompatActivity {
             {
 
             }
-        })
-        if(deactivate.isChecked())
-        {
-            thisAd.child("is_complete").setValue(true);
-            thisAd.child("date_completed").setValue(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
-        }
-
-        else
-        {
-            thisAd.child("category").setValue(category);
-            thisAd.child("date_created").setValue(databaseReference.child(thisAd.child("date_created").ToString()));
-        }
-        // Checking whether FilePathUri Is empty or not.
-        if (FilePathUri != null)
-        {
-            // Setting progressDialog Title.
-            progressDialog.setTitle("Changes are being applied...");
-
-            // Showing progressDialog.
-            progressDialog.show();
-
-            // Creating second StorageReference.
-            StorageReference storageReference2nd = storageReference.child(Storage_Path + System.currentTimeMillis() + "." + GetFileExtension(FilePathUri));
-
-            // Adding addOnSuccessListener to second StorageReference.
-            storageReference2nd.putFile(FilePathUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
-                    {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-                        {
-
-                            storageReference2nd.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
-                            {
-                                @Override
-                                public void onSuccess(Uri uri)
-                                {
-                                    url = uri.toString();
-
-                                    // Getting image name from EditText and store into string variable.
-                                    String postTitle = title.getText().toString().trim();
-                                    String postDesc = description.getText().toString().trim();
-                                    String cost = price.getText().toString().trim();
-                                    String createdDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-                                    String creator = session.getusename();
-                                    String editedDate = "";
-                                    Boolean isComplete = false;
-                                    Boolean underReport = false;
-                                    Boolean wasEdited = false;
-                                    String editor = "";
-                                    String dateCompleted = "";
-
-                                    // Hiding the progressDialog after done uploading.
-                                    progressDialog.dismiss();
-
-                                    // Showing toast message after done uploading.
-                                    Toast.makeText(getApplicationContext(), "Image Uploaded Successfully ", Toast.LENGTH_LONG).show();
-                                    String ImageUploadId = databaseReference.push().getKey();
-                                    @SuppressWarnings("VisibleForTests")
-                                    PostDetails imageUploadInfo = new PostDetails(ImageUploadId, creator, category, dateCompleted, createdDate, postDesc, editedDate, editor, url , cost, postTitle, isComplete, underReport, wasEdited);
-                                    //String ad_id, String advertiser, String category, String date_completed, String date_created, String description, String edited_date, String editor, String image_path, String price, String title, Boolean is_complete, Boolean under_report, Boolean was_edited
-                                    // Getting image upload ID.
-
-                                    // Adding image upload id s child element into databaseReference.
-                                    databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
-                                }
-                            });
-                        }
-                    })
-                    // If something goes wrong .
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-
-                            // Hiding the progressDialog.
-                            progressDialog.dismiss();
-
-                            // Showing exception erro message.
-                            Toast.makeText(PostAd.this, exception.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    })
-
-                    // On progress change upload time.
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>()
-                    {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot)
-                        {
-
-                            // Setting progressDialog Title.
-                            progressDialog.setTitle("Image is Uploading...");
-                        }
-                    });
-        }
-
-        else
-        {
-            Toast.makeText(PostAd.this, "Please Select Image or Add Image Name", Toast.LENGTH_LONG).show();
-        }
-    }*/
+        });
+    }
 
 
     // UploadImage method
