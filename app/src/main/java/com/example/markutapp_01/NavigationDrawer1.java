@@ -57,6 +57,7 @@ public class NavigationDrawer1 extends AppCompatActivity
     private RecyclerAdapter recyclerAdapter1;
     Spinner categoryList;
     private MyListingsAdapter myListingAdapter = null;
+    String currentPage="Dashboard";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,12 +153,23 @@ public class NavigationDrawer1 extends AppCompatActivity
                 category = categoryList.getSelectedItem().toString();
                 System.out.println("Spinner value" +category);
                 if(!(searchValue.isEmpty())) {
-                    GetDataFromFirebase(searchValue,category);
+                    if(currentPage=="Dashboard") {
+                        GetDataFromFirebase(false,searchValue, category);
+                    }
+                    else{
+                        GetDataFromFirebase(true,searchValue, category);
+                    }
                 }
                 else{
                     System.out.println("asdfghjkl");
+
                     category = categoryList.getSelectedItem().toString();
-                    GetDataFromFirebase(category);
+                    if(currentPage=="Dashboard") {
+                        GetDataFromFirebase(false,category);
+                    }
+                    else{
+                        GetDataFromFirebase(true,category);
+                    }
                 }
                 return false;
             }
@@ -167,12 +179,23 @@ public class NavigationDrawer1 extends AppCompatActivity
 
                 if(!(newText.isEmpty())) {
                     category = categoryList.getSelectedItem().toString();
-                    GetDataFromFirebase(newText,category);
+                    if(currentPage=="Dashboard") {
+                        GetDataFromFirebase(false,newText, category);
+                    }
+                    else{
+                        GetDataFromFirebase(true,newText, category);
+                    }
                 }
                 else{
                     System.out.println("asdfghjkl");
                     category = categoryList.getSelectedItem().toString();
-                    GetDataFromFirebase(category);
+                    if(currentPage=="Dashboard") {
+                        GetDataFromFirebase(false,category);
+                    }
+                    else{
+                        GetDataFromFirebase(true,category);
+                    }
+
                 }
                 return false;
             }
@@ -190,13 +213,23 @@ public class NavigationDrawer1 extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 items=parent.getItemAtPosition(position).toString();
-                System.out.println("categoryyyyyyyyyyyyyyyyyyyy"+items);
-                GetDataFromFirebase(items);
+                System.out.println("categoryyyyyyyyyyyyyyyyyyyy"+currentPage);
+                if(currentPage=="Dashboard") {
+                    GetDataFromFirebase(false,items);
+                }
+                else{
+                    GetDataFromFirebase(true,items);
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                GetDataFromFirebase(false);
+                if(currentPage=="Dashboard") {
+                    GetDataFromFirebase(false);
+                }
+                else{
+                    GetDataFromFirebase(true);
+                }
             }
         });
 
@@ -209,6 +242,7 @@ public class NavigationDrawer1 extends AppCompatActivity
         navigationView.getMenu().findItem(R.id.nav_gallery).setOnMenuItemClickListener(menuItem ->
         {
             fab.setVisibility(View.GONE);
+            currentPage="MyListings";
             GetDataFromFirebase(true);
             return true;
         });
@@ -216,6 +250,7 @@ public class NavigationDrawer1 extends AppCompatActivity
         navigationView.getMenu().findItem(R.id.viewDashboard).setOnMenuItemClickListener(menuItem ->
         {
             fab.setVisibility(View.VISIBLE);
+            currentPage="Dashboard";
             GetDataFromFirebase(false);
             return true;
         });
@@ -250,68 +285,146 @@ public class NavigationDrawer1 extends AppCompatActivity
 
 
 
-    private void GetDataFromFirebase(String categorySelected) {
+    private void GetDataFromFirebase(boolean list,String categorySelected) {
         //Query query=myRef.child();
         System.out.println(categorySelected);
+        User_Details user = global.getUser();
 
+        if(!list) {
+            if (categorySelected.equals("All")) {
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
 
-        // searchValue = ""
+                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                        ClearAll();
 
-        //Divya Krishna will fetch values based on search value
-
-        // based on the date advertisement should display (order by date) //
-        if(categorySelected.equals("All")) {
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-
-                public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                    ClearAll();
-
-                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                        Messages messages = new Messages();
-                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                        messages.setImageTitle(snapshot.child("title").getValue().toString());
-                        messages.setPrice(snapshot.child("price").getValue().toString());
-                        //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                        messagesList.add(messages);
+                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                            Messages messages = new Messages();
+                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                            messages.setImageTitle(snapshot.child("title").getValue().toString());
+                            messages.setPrice(snapshot.child("price").getValue().toString());
+                            //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                            messagesList.add(messages);
+                        }
+                        recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
+                        recyclerView.setAdapter(recyclerAdapter);
+                        recyclerAdapter.notifyDataSetChanged();
                     }
-                    recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
-                    recyclerView.setAdapter(recyclerAdapter);
-                    recyclerAdapter.notifyDataSetChanged();
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-        }
-        else{
-            myRef.orderByChild("category").equalTo(categorySelected).addValueEventListener(new ValueEventListener() {
-                @Override
-
-                public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                    ClearAll();
-
-                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                        Messages messages = new Messages();
-                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                        messages.setImageTitle(snapshot.child("title").getValue().toString());
-                        messages.setPrice(snapshot.child("price").getValue().toString());
-                        //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                        messagesList.add(messages);
                     }
-                    recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
-                    recyclerView.setAdapter(recyclerAdapter);
-                    recyclerAdapter.notifyDataSetChanged();
-                }
+                });
+            } else {
+                myRef.orderByChild("category").equalTo(categorySelected).addValueEventListener(new ValueEventListener() {
+                    @Override
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                        ClearAll();
 
-                }
-            });
+                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                            Messages messages = new Messages();
+                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                            messages.setImageTitle(snapshot.child("title").getValue().toString());
+                            messages.setPrice(snapshot.child("price").getValue().toString());
+                            //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                            messagesList.add(messages);
+                        }
+                        recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
+                        recyclerView.setAdapter(recyclerAdapter);
+                        recyclerAdapter.notifyDataSetChanged();
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+        }else{
+            if(categorySelected.equals("All")) {
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+
+                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                        ClearAll();
+
+                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                            String advertiser = snapshot.child("advertiser").getValue().toString();
+
+                                Messages messages = new Messages();
+                                messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                messages.setPrice(snapshot.child("price").getValue().toString());
+
+
+                            if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                            {
+                                continue;
+                            }
+
+                            messagesList.add(messages);
+                        }
+
+
+                            myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                            recyclerView.setAdapter(myListingAdapter);
+                            myListingAdapter.notifyDataSetChanged();
+
+
+
+
+                        }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+            else{
+                myRef.orderByChild("category").equalTo(categorySelected).addValueEventListener(new ValueEventListener() {
+                    @Override
+
+                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                        ClearAll();
+
+                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+
+                            System.out.println("rakiiiiiiiiii"+user.email_id);
+
+                                Messages messages = new Messages();
+                                messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                messages.setPrice(snapshot.child("price").getValue().toString());
+
+                                if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                                {
+                                    continue;
+                                }
+
+                                messagesList.add(messages);
+                            }
+
+
+                                myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                                recyclerView.setAdapter(myListingAdapter);
+                                myListingAdapter.notifyDataSetChanged();
+
+
+
+
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
         }
 
     }
@@ -370,81 +483,264 @@ public class NavigationDrawer1 extends AppCompatActivity
                 });
         }
 
-    private void GetDataFromFirebase(String text, String categoryItem) {
-        System.out.println("emptyyyyyyyyyyyy"+text);
-         if(!text.isEmpty()) {
-            //Query query=myRef.child();
-            System.out.println("searchhhhhhhhhhhhhhhhh" + categoryItem);
-            myRef.orderByChild("category").equalTo(categoryItem).addValueEventListener(new ValueEventListener() {
+    private void GetDataFromFirebase(boolean list,String text, String categoryItem) {
+        User_Details user = global.getUser();
 
-                @Override
+        if(!list) {
+            if (!text.isEmpty()) {
+                if(categoryItem.equals("All")){
+                    myRef.addValueEventListener(new ValueEventListener() {
 
-                public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                    ClearAll();
+                        @Override
 
-                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                        String t = snapshot.child("title").getValue().toString();
-                        String patternString = ".*" + text + ".*";
+                        public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                            ClearAll();
 
-                        Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
+                            for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                                String t = snapshot.child("title").getValue().toString();
+                                String patternString = ".*" + text + ".*";
 
-                        Matcher matcher = pattern.matcher(t);
+                                Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
+
+                                Matcher matcher = pattern.matcher(t);
 
 
-                        if (matcher.matches()) {
+                                if (matcher.matches()) {
+                                    Messages messages = new Messages();
+                                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                    messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                    messages.setPrice(snapshot.child("price").getValue().toString());
+                                    // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                                    messagesList.add(messages);
+                                    // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
+                                }
+                            }
+                            recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
+                            recyclerView.setAdapter(recyclerAdapter1);
+                            recyclerAdapter1.notifyDataSetChanged();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }else {
+                    //Query query=myRef.child();
+                    System.out.println("searchhhhhhhhhhhhhhhhh" + categoryItem);
+                    myRef.orderByChild("category").equalTo(categoryItem).addValueEventListener(new ValueEventListener() {
+
+                        @Override
+
+                        public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                            ClearAll();
+
+                            for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                                String t = snapshot.child("title").getValue().toString();
+                                String patternString = ".*" + text + ".*";
+
+                                Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
+
+                                Matcher matcher = pattern.matcher(t);
+
+
+                                if (matcher.matches()) {
+                                    Messages messages = new Messages();
+                                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                    messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                    messages.setPrice(snapshot.child("price").getValue().toString());
+                                    // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                                    messagesList.add(messages);
+                                    // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
+                                }
+                            }
+                            recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
+                            recyclerView.setAdapter(recyclerAdapter1);
+                            recyclerAdapter1.notifyDataSetChanged();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+            } else {
+
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+
+                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                        ClearAll();
+
+                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                            String advertiser=snapshot.child("advertiser").getValue().toString();
+                            if(advertiser==user.email_id) {
+                                Messages messages = new Messages();
+                                messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                messages.setPrice(snapshot.child("price").getValue().toString());
+                                //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                                messagesList.add(messages);
+                            }
+                        }
+                        recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
+                        recyclerView.setAdapter(recyclerAdapter);
+                        recyclerAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+            }
+        }else{
+            if(!text.isEmpty()) {
+                if(categoryItem.equals("All")){
+                    System.out.println("searchhhhhhhhhhhhhhhhh" + categoryItem);
+                    myRef.addValueEventListener(new ValueEventListener() {
+
+                        @Override
+
+                        public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                            ClearAll();
+
+                            for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+
+
+                                String t = snapshot.child("title").getValue().toString();
+                                String patternString = ".*" + text + ".*";
+
+                                Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
+
+                                Matcher matcher = pattern.matcher(t);
+
+
+                                if (matcher.matches()) {
+                                    Messages messages = new Messages();
+                                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                    messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                    messages.setPrice(snapshot.child("price").getValue().toString());
+
+                                    if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString())) {
+                                        continue;
+                                    }
+
+                                    messagesList.add(messages);
+                                }
+                            }
+
+
+                            myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                            recyclerView.setAdapter(myListingAdapter);
+                            myListingAdapter.notifyDataSetChanged();
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+                else {
+                    //Query query=myRef.child();
+                    System.out.println("searchhhhhhhhhhhhhhhhh" + categoryItem);
+                    myRef.orderByChild("category").equalTo(categoryItem).addValueEventListener(new ValueEventListener() {
+
+                        @Override
+
+                        public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                            ClearAll();
+
+                            for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+
+
+                                String t = snapshot.child("title").getValue().toString();
+                                String patternString = ".*" + text + ".*";
+
+                                Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
+
+                                Matcher matcher = pattern.matcher(t);
+
+
+                                if (matcher.matches()) {
+                                    Messages messages = new Messages();
+                                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                    messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                    messages.setPrice(snapshot.child("price").getValue().toString());
+
+                                    if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString())) {
+                                        continue;
+                                    }
+
+                                    messagesList.add(messages);
+                                }
+                            }
+
+
+                            myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                            recyclerView.setAdapter(myListingAdapter);
+                            myListingAdapter.notifyDataSetChanged();
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+
+
+
+            }
+            else{
+
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+
+                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                        ClearAll();
+
+                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
                             Messages messages = new Messages();
                             messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
-                            // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                            if ( !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                            {
+                                continue;
+                            }
+
                             messagesList.add(messages);
-                            // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
                         }
-                        recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
-                        recyclerView.setAdapter(recyclerAdapter1);
-                        recyclerAdapter1.notifyDataSetChanged();
+
+
+                            myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                            recyclerView.setAdapter(myListingAdapter);
+                            myListingAdapter.notifyDataSetChanged();
+
                     }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-
-
-
-
-
-        }
-        else{
-
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-
-                public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                    ClearAll();
-
-                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                        Messages messages = new Messages();
-                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                        messages.setImageTitle(snapshot.child("title").getValue().toString());
-                        messages.setPrice(snapshot.child("price").getValue().toString());
-                        //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                        messagesList.add(messages);
                     }
-                    recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
-                    recyclerView.setAdapter(recyclerAdapter);
-                    recyclerAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
+                });
 
 
+            }
         }
     }
 
