@@ -359,6 +359,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                         messages.setImageTitle(snapshot.child("title").getValue().toString());
                         messages.setPrice(snapshot.child("price").getValue().toString());
+                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                         //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                         messagesList.add(messages);
                     }
@@ -455,6 +456,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
+                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                             // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                             messagesList.add(messages);
                             // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
@@ -485,6 +487,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                         messages.setImageTitle(snapshot.child("title").getValue().toString());
                         messages.setPrice(snapshot.child("price").getValue().toString());
+                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                         //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                         messagesList.add(messages);
                     }
