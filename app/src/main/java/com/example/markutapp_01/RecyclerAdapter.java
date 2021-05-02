@@ -44,6 +44,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
     public com.example.markutapp_01.RecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ad_list,parent,false);
 
+        Globals global = Globals.getInstance();
+        User_Details user = global.getUser();
+
+        TextView report = (TextView)view.findViewById(R.id.report_btn);
+        ImageView reportLogo = (ImageView)view.findViewById(R.id.report_btn_logo);
+
+        if(user.type.toLowerCase().equals("admin"))
+        {
+            report.setVisibility(View.GONE);
+            reportLogo.setVisibility(View.GONE);
+        }
         report_btn_logo=view.findViewById(R.id.report_btn_logo);
 
         report_btn_logo.setOnClickListener(new View.OnClickListener() {
