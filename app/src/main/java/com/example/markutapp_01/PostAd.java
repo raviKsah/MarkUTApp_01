@@ -25,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -239,6 +240,18 @@ public class PostAd extends AppCompatActivity {
             adTitle.setText(newTitle);
             postAdd.setText(newTitle);
             deactivate.setVisibility(View.VISIBLE);
+
+            ImageView image = (ImageView)findViewById(R.id.SelectImage);
+
+            String stringURL = intent.getStringExtra("imageURL");
+
+            Uri uri = Uri.parse(stringURL);
+
+            Glide.with(PostAd.this)
+                    .asBitmap()
+                    .load(uri)
+                    .into(image);
+
         }
     }
 
