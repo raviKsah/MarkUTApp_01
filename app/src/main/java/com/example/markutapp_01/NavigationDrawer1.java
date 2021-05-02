@@ -304,7 +304,6 @@ public class NavigationDrawer1 extends AppCompatActivity
         {
             if(!user.type.toLowerCase().equals("admin"))
             {
-
                 fab.setVisibility(View.VISIBLE);
             }
             currentPage="Dashboard";
@@ -405,6 +404,12 @@ public class NavigationDrawer1 extends AppCompatActivity
                                 continue;
                             }
 
+                                Messages messages = new Messages();
+                                messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                messages.setPrice(snapshot.child("price").getValue().toString());
+                                messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                messagesList.add(messages);
 
                             Messages messages = new Messages();
                             messages.setImageUrl(snapshot.child("image_path").getValue().toString());
@@ -864,6 +869,14 @@ public class NavigationDrawer1 extends AppCompatActivity
             }
         }
     }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError error) {
+
+    }
+    });
+
+     }**/
 
 
 
