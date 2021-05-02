@@ -469,14 +469,11 @@ public class NavigationDrawer1 extends AppCompatActivity
 
                         }
 
+                        Collections.reverse(messagesList);
 
                         myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(myListingAdapter);
                         myListingAdapter.notifyDataSetChanged();
-
-
-
-
                     }
 
 
@@ -515,11 +512,11 @@ public class NavigationDrawer1 extends AppCompatActivity
                         }
 
 
+                        Collections.reverse(messagesList);
+
                         myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(myListingAdapter);
                         myListingAdapter.notifyDataSetChanged();
-
-
 
 
                     }
