@@ -28,7 +28,9 @@
         <activity
             android:name=".NavigationDrawer1"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-        <activity android:name=".LoginActivity">
+        <activity
+            android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
