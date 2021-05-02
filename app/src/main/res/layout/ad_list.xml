@@ -2,7 +2,6 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/view_dashboards_cards"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@android:color/white"
     app:cardCornerRadius="10dp"
@@ -32,11 +31,11 @@
                     android:id="@+id/iv_que_item"
                     android:padding="5dp" />
 
-                <!--                <ImageView-->
-                <!--                    android:id="@+id/iv_que_item"-->
-                <!--                    android:layout_width="130dp"-->
-                <!--                    android:layout_height="130dp"-->
-                <!--                    android:padding="5dp" />-->
+<!--                <ImageView-->
+<!--                    android:id="@+id/iv_que_item"-->
+<!--                    android:layout_width="130dp"-->
+<!--                    android:layout_height="130dp"-->
+<!--                    android:padding="5dp" />-->
 
             </androidx.cardview.widget.CardView>
         </LinearLayout>
@@ -47,11 +46,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
-            <TextView
-                android:id="@+id/adID"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"
