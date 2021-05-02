@@ -9,11 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".ViewAdvertisement"></activity>
+
+
         <activity
             android:name=".EditAdvertisement"
             android:label="@string/title_activity_edit_advertisement"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+
+
+
+
         <activity
+
             android:name=".PostAd"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity android:name=".ViewDashboard" />
@@ -42,7 +50,7 @@
         <activity
             android:name=".ChangePassword"
             android:label="ChangePassword"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
     </application>
 
 </manifest>

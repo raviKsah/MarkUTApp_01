@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -33,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,7 +47,7 @@ public class NavigationDrawer1 extends AppCompatActivity
     ImageButton report_btn_logo;
     String items;
     private AppBarConfiguration mAppBarConfiguration;
-
+    private DrawerLayout drawer;
     String category;
     private Globals global = Globals.getInstance();
 
@@ -59,6 +61,10 @@ public class NavigationDrawer1 extends AppCompatActivity
     private RecyclerAdapter recyclerAdapter1;
     Spinner categoryList;
     private MyListingsAdapter myListingAdapter = null;
+
+    // Combined with user type this is a way to prevent all ads from loading on
+    // initially logging in.
+    int categoryClicked = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +91,13 @@ public class NavigationDrawer1 extends AppCompatActivity
         });
 */
 
+        User_Details user = global.getUser();
+
+        if(user.type.toLowerCase().equals("admin"))
+        {
+            fab.setVisibility(View.GONE);
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,15 +110,22 @@ public class NavigationDrawer1 extends AppCompatActivity
 //                        .setAction("Action", null).show();
             }
         });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
+
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         View headerView = navigationView.getHeaderView(0);
         TextView headerUser = (TextView) headerView.findViewById(R.id.textView100);
         TextView headerEmail = (TextView) headerView.findViewById(R.id.textView101);
-        headerUser.setText(global.getUser().getFirst_name());
-        headerEmail.setText(global.getUser().getEmail_id());
 
+        if(user.type.toLowerCase().equals("admin"))
+        {
+            headerUser.setText("Hello, " + global.getUser().getFirst_name() + " " + global.getUser().getLast_name()+" (Admin)");
+        }
+        else{
+            headerUser.setText("Hello, " + global.getUser().getFirst_name() + " " + global.getUser().getLast_name());
+
+        }
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -117,8 +137,6 @@ public class NavigationDrawer1 extends AppCompatActivity
         NavigationUI.setupWithNavController(navigationView, navController);
 
         SearchView searchBar = (SearchView)findViewById(R.id.search);
-
-
 
 
        /** searchBar.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +156,7 @@ public class NavigationDrawer1 extends AppCompatActivity
             Intent intent = new Intent(NavigationDrawer1.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            closeDrawer();
             return true;
         });
 
@@ -145,6 +164,7 @@ public class NavigationDrawer1 extends AppCompatActivity
         {
             Intent intent = new Intent(getApplicationContext(), PostAd.class);
             startActivity(intent);
+            closeDrawer();
             return true;
         });
 
@@ -202,20 +222,17 @@ public class NavigationDrawer1 extends AppCompatActivity
             }
         });
 
-
-       /* categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                items=parent.getItemAtPosition(position).toString();
-                GetDataFromFirebase(items);
-            }
-        });*/
         categoryList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                items=parent.getItemAtPosition(position).toString();
-                System.out.println("categoryyyyyyyyyyyyyyyyyyyy"+items);
-                GetDataFromFirebase(items);
+                if(categoryClicked > 0)
+                {
+                    items = parent.getItemAtPosition(position).toString();
+                    System.out.println("categoryyyyyyyyyyyyyyyyyyyy" + items);
+                    GetDataFromFirebase(items);
+                }
+
+                categoryClicked++;
             }
 
             @Override
@@ -234,29 +251,30 @@ public class NavigationDrawer1 extends AppCompatActivity
         {
             fab.setVisibility(View.GONE);
             GetDataFromFirebase(true);
+            headerEmail.setText("Your Listings");
+            closeDrawer();
             return true;
         });
 
         navigationView.getMenu().findItem(R.id.viewDashboard).setOnMenuItemClickListener(menuItem ->
         {
-            fab.setVisibility(View.VISIBLE);
+            if(!user.type.toLowerCase().equals("admin"))
+            {
+                fab.setVisibility(View.VISIBLE);
+            }
+
             GetDataFromFirebase(false);
+            headerEmail.setText("Dashboard");
+            closeDrawer();
             return true;
         });
     }
 
-
-/*    public void editAd(View view)
-    {
-        LinearLayout ll = (LinearLayout)findViewById(R.id.adInfoEdit);
-
-        TextView v = (TextView)ll.getChildAt(1);
-
-        Intent intent = new Intent(NavigationDrawer1.this, EditAdvertisement.class);
-        intent.putExtra("adID", view.getId());
-        startActivity(intent);
+    public void closeDrawer() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
     }
-*/
 
     @Override
     public void onBackPressed() {
@@ -295,8 +313,6 @@ public class NavigationDrawer1 extends AppCompatActivity
 
     private void GetDataFromFirebase(String categorySelected) {
         //Query query=myRef.child();
-        System.out.println(categorySelected);
-
 
         // searchValue = ""
 
@@ -304,7 +320,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
         // based on the date advertisement should display (order by date) //
         if(categorySelected.equals("All")) {
-            myRef.addValueEventListener(new ValueEventListener() {
+            myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
                 @Override
 
                 public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -315,8 +331,12 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                         messages.setImageTitle(snapshot.child("title").getValue().toString());
                         messages.setPrice(snapshot.child("price").getValue().toString());
-                        //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+
                         messagesList.add(messages);
+
+                        Collections.reverse(messagesList);
+
                     }
                     recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                     recyclerView.setAdapter(recyclerAdapter);
@@ -341,8 +361,12 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                         messages.setImageTitle(snapshot.child("title").getValue().toString());
                         messages.setPrice(snapshot.child("price").getValue().toString());
+                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                         //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                         messagesList.add(messages);
+
+                        Collections.reverse(messagesList);
+
                     }
                     recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                     recyclerView.setAdapter(recyclerAdapter);
@@ -361,9 +385,8 @@ public class NavigationDrawer1 extends AppCompatActivity
 
     private void GetDataFromFirebase(boolean myListing)
     {
-            myRef.addValueEventListener(new ValueEventListener()
+            myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener()
             {
-
                 public void onDataChange(@NonNull DataSnapshot datasnapshot)
                 {
                     ClearAll();
@@ -377,15 +400,18 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                         messages.setImageTitle(snapshot.child("title").getValue().toString());
                         messages.setPrice(snapshot.child("price").getValue().toString());
-                        System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
 
-                        if (myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                        if ((myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                            || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
+                            || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
                         {
                             continue;
                         }
 
                         messagesList.add(messages);
                     }
+
+                    Collections.reverse(messagesList);
 
                     if (myListing)
                     {
@@ -411,8 +437,8 @@ public class NavigationDrawer1 extends AppCompatActivity
         }
 
     private void GetDataFromFirebase(String text, String categoryItem) {
-        System.out.println("emptyyyyyyyyyyyy"+text);
-         if(!text.isEmpty()) {
+        if(!text.isEmpty())
+        {
             //Query query=myRef.child();
             System.out.println("searchhhhhhhhhhhhhhhhh" + categoryItem);
             myRef.orderByChild("category").equalTo(categoryItem).addValueEventListener(new ValueEventListener() {
@@ -436,10 +462,15 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
+                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                             // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                             messagesList.add(messages);
+
                             // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
                         }
+
+                        Collections.reverse(messagesList);
+
                         recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter1);
                         recyclerAdapter1.notifyDataSetChanged();
@@ -452,14 +483,10 @@ public class NavigationDrawer1 extends AppCompatActivity
                 }
             });
 
-
-
-
-
         }
         else{
 
-            myRef.addValueEventListener(new ValueEventListener() {
+            myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
                 @Override
 
                 public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -470,8 +497,12 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                         messages.setImageTitle(snapshot.child("title").getValue().toString());
                         messages.setPrice(snapshot.child("price").getValue().toString());
+                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                         //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                         messagesList.add(messages);
+
+                        Collections.reverse(messagesList);
+
                     }
                     recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                     recyclerView.setAdapter(recyclerAdapter);
@@ -498,7 +529,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 //        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
      //      final String uid = user.getUid();
 
-        myRef.addValueEventListener(new ValueEventListener() {
+        myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
