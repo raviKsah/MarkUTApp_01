@@ -4,7 +4,7 @@
     <string name="prompt_password">Password</string>
     <string name="promptReenter_password">Re-enter Password</string>
     <string name="login">Login</string>
-    <string name="create_new">Click here for register</string>
+    <string name="create_new">Click here to register</string>
     <string name="forgot_password">FORGOT PASSWORD?</string>
     <string name="enter_email">Enter your email address</string>
     <string name="Goback_login">Login</string>
