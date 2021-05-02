@@ -11,8 +11,13 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class MyListingsAdapter extends RecyclerAdapter
@@ -69,11 +74,35 @@ public class MyListingsAdapter extends RecyclerAdapter
 		holder.edit.setText(messagesList.get(position).getAdID());
 		Glide.with(mContext).load(messagesList.get(position).getImageUrl()).into(holder.imageView);
 		adImages.put(messagesList.get(position).getAdID(), messagesList.get(position).getImageUrl());
+		String newDate = "";
+		try
+		{
+			newDate = convertDateFormat(messagesList.get(position).getDate());
+		} catch(ParseException e)
+		{
+			e.printStackTrace();
+		}
+		holder.date.setText(newDate);
 	}
+
 
 	@Override
 	public int getItemCount()
 	{
 		return messagesList.size();
+	}
+
+	public String convertDateFormat(String date) throws ParseException
+	{
+		String newDate = "";
+
+		DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+		DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+
+		Date inputDate = inputFormat.parse(date);
+
+		newDate = outputFormat.format(inputDate);
+
+		return newDate;
 	}
 }

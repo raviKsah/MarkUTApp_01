@@ -2,16 +2,11 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/view_dashboards_cards"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@android:color/white"
     app:cardCornerRadius="10dp"
     android:layout_margin="5dp">
-
-    <TextView
-        android:id="@+id/editAdID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,72 +14,105 @@
         android:orientation="horizontal"
         android:padding="10dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center_vertical"
-                app:cardElevation="4dp"
-                app:cardPreventCornerOverlap="false">
+        <androidx.cardview.widget.CardView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_vertical"
+            app:cardElevation="4dp"
+            app:cardPreventCornerOverlap="false">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/iv_que_item"
-                    android:padding="5dp" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/iv_que_item"
+                android:layout_gravity="left"
+                android:padding="5dp" />
 
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
 
 
         <LinearLayout
-            android:id="@+id/adInfoEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp">
             <TextView
-                android:id="@+id/ad_price"
+                android:id="@+id/editAdID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="null"
-                android:paddingStart="5dp"
-                android:paddingLeft="5dp"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="20sp" />
+                android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/ad_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="5dp"
-                android:paddingLeft="5dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/black"
-                android:textSize="15sp"
-                android:textStyle="bold" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:gravity="center_vertical|right"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="$"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/ad_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
+                    android:hint="null"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
 
                 <TextView
                     android:id="@+id/editAd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="100dp"
                     android:clickable="true"
-                    android:padding="5dp"
                     android:text="Edit"
                     android:textSize="15sp" />
 
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@android:color/black"
+                android:id="@+id/ad_title"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:hint="Null"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last updated on"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="italic"
+                />
+
+            <TextView
+                android:id="@+id/view_dashboard_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="italic"
+                android:hint="null"
+                android:textColor="@color/colorPrimary"
+                />
+
+
 
         </LinearLayout>
 

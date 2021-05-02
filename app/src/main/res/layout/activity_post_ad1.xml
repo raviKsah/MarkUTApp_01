@@ -34,7 +34,7 @@
 
 
                 <TextView
-                    android:id="@+id/postAdTitle"
+                    android:id="@+id/appTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif-medium"

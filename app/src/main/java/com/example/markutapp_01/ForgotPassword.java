@@ -2,13 +2,11 @@ package com.example.markutapp_01;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -53,7 +51,7 @@ public class ForgotPassword extends AppCompatActivity
                                 Intent intent = new Intent(getApplicationContext(), ValidateSecurityQuestions.class);
                                 startActivity(intent);
                             } else {
-                                Toast.makeText(ForgotPassword.this, "Email doesn't Exits", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ForgotPassword.this, "Email doesn't exist.", Toast.LENGTH_LONG).show();
                             }
                         }
 

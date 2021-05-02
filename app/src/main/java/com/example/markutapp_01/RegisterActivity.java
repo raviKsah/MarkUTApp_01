@@ -9,8 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,11 +24,11 @@ import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText firstName,lastName, email, phone, password,answer;
+    EditText firstName,lastName, email, phone, password,answer,password2;
     Button register;
     TextView login;
-    boolean isFirstNameValid,isLastNameValid, isEmailValid, isPhoneValid, isPasswordValid;
-    TextInputLayout firstNameError,lastNameError, emailError, phoneError, passError;
+    boolean isFirstNameValid,isLastNameValid, isEmailValid, isPhoneValid, isPasswordValid, isPassword2Valid, isAnswerValid;
+    TextInputLayout firstNameError,lastNameError, emailError, phoneError, passError, passError2, answerError;
     String question ="";
     String type="End User";
     DatabaseReference firebaseAuth;
@@ -49,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         email = (EditText) findViewById(R.id.email);
         phone = (EditText) findViewById(R.id.phone);
         password = (EditText) findViewById(R.id.password);
+        password2 = (EditText)findViewById(R.id.promptReenter_password);
         login = (TextView) findViewById(R.id.login);
         register = (Button) findViewById(R.id.register);
         answer=(EditText)findViewById(R.id.SecurityAns);
@@ -59,6 +58,8 @@ public class RegisterActivity extends AppCompatActivity {
         emailError = (TextInputLayout) findViewById(R.id.emailError);
         phoneError = (TextInputLayout) findViewById(R.id.phoneError);
         passError = (TextInputLayout) findViewById(R.id.passError);
+        passError2 = (TextInputLayout)findViewById(R.id.Re_enter_pwd);
+        answerError = (TextInputLayout)findViewById(R.id.securityAnsError);
 
         //get the spinner from the xml.
         dropdown = findViewById(R.id.spinner);
@@ -151,7 +152,37 @@ public class RegisterActivity extends AppCompatActivity {
             passError.setErrorEnabled(false);
         }
 
-        if (isFirstNameValid && isLastNameValid && isEmailValid && isPhoneValid && isPasswordValid) {
+        if(password2.getText().toString().isEmpty())
+        {
+            passError2.setError("Please reenter the password.");
+            isPassword2Valid = false;
+        }
+
+        else if(!password2.getText().toString().equals(password.getText().toString()))
+        {
+            passError2.setError("The passwords you entered do not match.");
+            isPassword2Valid = false;
+        }
+
+        else
+        {
+            isPassword2Valid = true;
+            passError2.setErrorEnabled(false);
+        }
+
+        if(answer.getText().toString().isEmpty())
+        {
+            answerError.setError("Please provide an answer to your security question.");
+            isAnswerValid = false;
+        }
+
+        else
+        {
+            isAnswerValid = true;
+            answerError.setErrorEnabled(false);
+        }
+
+        if (isFirstNameValid && isLastNameValid && isEmailValid && isPhoneValid && isPasswordValid && isPassword2Valid && isAnswerValid) {
             verifyUser();
         }
 
