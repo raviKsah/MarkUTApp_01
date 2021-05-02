@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_01.RecyclerAdapter.ViewHolder> {
 
@@ -33,6 +35,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
     ViewHolder holder;
     CardView cardView;
     Boolean reportChecker = false;
+
+    Map<String, String> adImages = new HashMap<String, String>();
 
     public RecyclerAdapter(Context mContext, ArrayList<Messages> messagesList) {
         this.mContext = mContext;
@@ -50,11 +54,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
         TextView report = (TextView)view.findViewById(R.id.report_btn);
         ImageView reportLogo = (ImageView)view.findViewById(R.id.report_btn_logo);
 
-        if(user.type.toLowerCase().equals("admin"))
-        {
-            report.setVisibility(View.GONE);
-            reportLogo.setVisibility(View.GONE);
-        }
         report_btn_logo=view.findViewById(R.id.report_btn_logo);
 
         report_btn_logo.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +74,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
             TextView id = (TextView)view.findViewById(R.id.adID);
             Intent intent = new Intent(mContext, ViewAdvertisement.class);
             intent.putExtra("adID", id.getText().toString());
+            intent.putExtra("imageURL", adImages.get(id.getText().toString()));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(intent);
         });
@@ -162,7 +162,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
         holder.price.setText(messagesList.get(position).getPrice());
         Glide.with(mContext).load(messagesList.get(position).getImageUrl()).into(holder.imageView);
 
-
+        adImages.put(messagesList.get(position).getAdID(), messagesList.get(position).getImageUrl());
 
         holder.adId.setText(messagesList.get(position).getAdID());
 

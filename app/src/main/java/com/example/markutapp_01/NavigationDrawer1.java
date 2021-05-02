@@ -34,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -328,13 +329,9 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setPrice(snapshot.child("price").getValue().toString());
                         messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
-
-                        ////Fvrt button
-
-
-
-                        //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                         messagesList.add(messages);
+
+                        Collections.reverse(messagesList);
                     }
                     recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                     recyclerView.setAdapter(recyclerAdapter);
@@ -405,6 +402,8 @@ public class NavigationDrawer1 extends AppCompatActivity
                         }
 
                         messagesList.add(messages);
+
+                        Collections.reverse(messagesList);
                     }
 
                     if (myListing)
@@ -459,6 +458,8 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                             // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                             messagesList.add(messages);
+
+                            Collections.reverse(messagesList);
                             // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
                         }
                         recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
@@ -490,6 +491,8 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                         //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                         messagesList.add(messages);
+
+                        Collections.reverse(messagesList);
                     }
                     recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                     recyclerView.setAdapter(recyclerAdapter);

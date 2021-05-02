@@ -203,22 +203,18 @@ public class PostAd extends AppCompatActivity {
 
     public void getAdDetails()
     {
-        databaseReference.orderByChild("date_created").addValueEventListener(new ValueEventListener()
+        databaseReference.orderByChild("ad_id").equalTo(adID).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 for (DataSnapshot datas : dataSnapshot.getChildren())
                 {
-                    if(datas.child("ad_id").getValue().toString().equals(adID))
-                    {
-                        title.setText(datas.child("title").getValue().toString());
-                        description.setText(datas.child("description").getValue().toString());
-                        PostCategorySpinner.setText(datas.child("category").getValue().toString());
-                        price.setText(datas.child("price").getValue().toString());
+                    title.setText(datas.child("title").getValue().toString());
+                    description.setText(datas.child("description").getValue().toString());
+                    PostCategorySpinner.setText(datas.child("category").getValue().toString());
+                    price.setText(datas.child("price").getValue().toString());
 
-                        break;
-                    }
                 }
             }
 
