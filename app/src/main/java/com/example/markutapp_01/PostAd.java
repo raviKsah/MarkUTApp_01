@@ -182,7 +182,48 @@ public class PostAd extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if(uploadImage())
+                boolean isTitleValid = false;
+                boolean isDescValid = false;
+                boolean isCategoryValid = false;
+                boolean isCostValid = false;
+
+                if(!title.getText().toString().isEmpty())
+                {
+                    isTitleValid = true;
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Advertisement must have title! ", Toast.LENGTH_LONG).show();
+                }
+
+                if(!description.getText().toString().trim().isEmpty())
+                {
+                    isTitleValid = true;
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Advertisement must have description! ", Toast.LENGTH_LONG).show();
+                }
+
+                if (!category.isEmpty())//.toString().trim().isEmpty())
+                {
+                    isCategoryValid = true;
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Advertisement must have category! ", Toast.LENGTH_LONG).show();
+                }
+
+                if(!price.getText().toString().trim().isEmpty() )
+                {
+                    isCostValid = true;
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Advertisement must have price! ", Toast.LENGTH_LONG).show();
+                }
+
+                if(isTitleValid && isDescValid && isCategoryValid && isCostValid && uploadImage())
                 {
                     Intent intent = new Intent(getApplicationContext(), NavigationDrawer1.class);
                     startActivity(intent);
