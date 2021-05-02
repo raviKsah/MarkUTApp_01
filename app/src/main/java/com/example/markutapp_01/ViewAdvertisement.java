@@ -18,6 +18,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class ViewAdvertisement extends AppCompatActivity
 {
     DatabaseReference advertisementRef;
@@ -96,7 +102,13 @@ public class ViewAdvertisement extends AppCompatActivity
                     price.setText("$" + datas.child("price").getValue().toString());
                     category.setText(datas.child("category").getValue().toString());
                     // Can this be changed to MM/dd/yyyy?
-                    listedDate.setText(datas.child("date_created").getValue().toString());
+                    try
+                    {
+                        listedDate.setText(convertDateFormat(datas.child("date_created").getValue().toString()));
+                    } catch(ParseException e)
+                    {
+                        e.printStackTrace();
+                    }
                     description.setText(datas.child("description").getValue().toString());
                     email = datas.child("advertiser").getValue().toString();
                     sellerEmail.setText(email);
@@ -138,5 +150,19 @@ public class ViewAdvertisement extends AppCompatActivity
                 return;
             }
         });
+    }
+
+    public String convertDateFormat(String date) throws ParseException
+    {
+        String newDate = "";
+
+        DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+
+        Date inputDate = inputFormat.parse(date);
+
+        newDate = outputFormat.format(inputDate);
+
+        return newDate;
     }
 }

@@ -313,8 +313,6 @@ public class NavigationDrawer1 extends AppCompatActivity
 
     private void GetDataFromFirebase(String categorySelected) {
         //Query query=myRef.child();
-        System.out.println(categorySelected);
-
 
         // searchValue = ""
 
@@ -322,7 +320,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
         // based on the date advertisement should display (order by date) //
         if(categorySelected.equals("All")) {
-            myRef.addValueEventListener(new ValueEventListener() {
+            myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
                 @Override
 
                 public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -338,6 +336,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messagesList.add(messages);
 
                         Collections.reverse(messagesList);
+
                     }
                     recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                     recyclerView.setAdapter(recyclerAdapter);
@@ -367,6 +366,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messagesList.add(messages);
 
                         Collections.reverse(messagesList);
+
                     }
                     recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                     recyclerView.setAdapter(recyclerAdapter);
@@ -385,9 +385,8 @@ public class NavigationDrawer1 extends AppCompatActivity
 
     private void GetDataFromFirebase(boolean myListing)
     {
-            myRef.addValueEventListener(new ValueEventListener()
+            myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener()
             {
-
                 public void onDataChange(@NonNull DataSnapshot datasnapshot)
                 {
                     ClearAll();
@@ -410,9 +409,9 @@ public class NavigationDrawer1 extends AppCompatActivity
                         }
 
                         messagesList.add(messages);
-
-                        Collections.reverse(messagesList);
                     }
+
+                    Collections.reverse(messagesList);
 
                     if (myListing)
                     {
@@ -438,8 +437,8 @@ public class NavigationDrawer1 extends AppCompatActivity
         }
 
     private void GetDataFromFirebase(String text, String categoryItem) {
-        System.out.println("emptyyyyyyyyyyyy"+text);
-         if(!text.isEmpty()) {
+        if(!text.isEmpty())
+        {
             //Query query=myRef.child();
             System.out.println("searchhhhhhhhhhhhhhhhh" + categoryItem);
             myRef.orderByChild("category").equalTo(categoryItem).addValueEventListener(new ValueEventListener() {
@@ -467,9 +466,11 @@ public class NavigationDrawer1 extends AppCompatActivity
                             // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                             messagesList.add(messages);
 
-                            Collections.reverse(messagesList);
                             // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
                         }
+
+                        Collections.reverse(messagesList);
+
                         recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter1);
                         recyclerAdapter1.notifyDataSetChanged();
@@ -485,7 +486,7 @@ public class NavigationDrawer1 extends AppCompatActivity
         }
         else{
 
-            myRef.addValueEventListener(new ValueEventListener() {
+            myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
                 @Override
 
                 public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -501,6 +502,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messagesList.add(messages);
 
                         Collections.reverse(messagesList);
+
                     }
                     recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                     recyclerView.setAdapter(recyclerAdapter);
@@ -527,7 +529,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 //        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
      //      final String uid = user.getUid();
 
-        myRef.addValueEventListener(new ValueEventListener() {
+        myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 

@@ -319,8 +319,8 @@ public class PostAd extends AppCompatActivity {
                     if(deactivate.isChecked())
                     {
                         datas.child("is_complete").getRef().setValue(true);
-                        datas.child("date_completed").getRef().setValue(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
-                        datas.child("edit_date").getRef().setValue(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
+                        datas.child("date_completed").getRef().setValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date()));
+                        datas.child("edit_date").getRef().setValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date()));
                         datas.child("was_edited").getRef().setValue(true);
                     }
 
@@ -328,11 +328,14 @@ public class PostAd extends AppCompatActivity {
                     {
                         datas.child("category").getRef().setValue(PostCategorySpinner.getText().toString());
                         datas.child("description").getRef().setValue(description.getText().toString());
-                        datas.child("edit_date").getRef().setValue(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
+                        datas.child("edit_date").getRef().setValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date()));
                         datas.child("editor").getRef().setValue(user.email_id);
                         datas.child("price").getRef().setValue(price.getText().toString());
                         datas.child("title").getRef().setValue(title.getText().toString());
-                        datas.child("image_path").getRef().setValue(url);
+
+                        if(!url.equals(""))
+                            datas.child("image_path").getRef().setValue(url);
+
                         datas.child("was_edited").getRef().setValue(true);
                     }
                 }
@@ -385,7 +388,7 @@ public class PostAd extends AppCompatActivity {
                                         String postTitle = title.getText().toString().trim();
                                         String postDesc = description.getText().toString().trim();
                                         String cost = price.getText().toString().trim();
-                                        String createdDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                                        String createdDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date());
                                         String creator = session.getusename();
                                         String editedDate = "";
                                         Boolean isComplete = false;
@@ -440,6 +443,13 @@ public class PostAd extends AppCompatActivity {
 
             return true;
         }
+
+        else if(isEditPage)
+        {
+            editAd("");
+            return true;
+        }
+
         else {
             Toast.makeText(PostAd.this, "Please Select Image or Add Image Name", Toast.LENGTH_LONG).show();
             return false;
