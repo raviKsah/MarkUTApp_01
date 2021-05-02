@@ -61,6 +61,10 @@ public class NavigationDrawer1 extends AppCompatActivity
     Spinner categoryList;
     private MyListingsAdapter myListingAdapter = null;
 
+    // Combined with user type this is a way to prevent all ads from loading on
+    // initially logging in.
+    int categoryClicked = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +90,13 @@ public class NavigationDrawer1 extends AppCompatActivity
         });
 */
 
+        User_Details user = global.getUser();
+
+        if(user.type.toLowerCase().equals("admin"))
+        {
+            fab.setVisibility(View.GONE);
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,8 +116,8 @@ public class NavigationDrawer1 extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         TextView headerUser = (TextView) headerView.findViewById(R.id.textView100);
         TextView headerEmail = (TextView) headerView.findViewById(R.id.textView101);
-        headerUser.setText(global.getUser().getFirst_name());
-        headerEmail.setText(global.getUser().getEmail_id());
+        headerUser.setText("Hello, " + global.getUser().getFirst_name() + " " + global.getUser().getLast_name());
+        headerEmail.setText("Dashboard");
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -119,8 +130,6 @@ public class NavigationDrawer1 extends AppCompatActivity
         NavigationUI.setupWithNavController(navigationView, navController);
 
         SearchView searchBar = (SearchView)findViewById(R.id.search);
-
-
 
 
        /** searchBar.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +149,7 @@ public class NavigationDrawer1 extends AppCompatActivity
             Intent intent = new Intent(NavigationDrawer1.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            closeDrawer();
             return true;
         });
 
@@ -205,20 +215,17 @@ public class NavigationDrawer1 extends AppCompatActivity
             }
         });
 
-
-       /* categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                items=parent.getItemAtPosition(position).toString();
-                GetDataFromFirebase(items);
-            }
-        });*/
         categoryList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                items=parent.getItemAtPosition(position).toString();
-                System.out.println("categoryyyyyyyyyyyyyyyyyyyy"+items);
-                GetDataFromFirebase(items);
+                if(categoryClicked > 0)
+                {
+                    items = parent.getItemAtPosition(position).toString();
+                    System.out.println("categoryyyyyyyyyyyyyyyyyyyy" + items);
+                    GetDataFromFirebase(items);
+                }
+
+                categoryClicked++;
             }
 
             @Override
@@ -237,14 +244,20 @@ public class NavigationDrawer1 extends AppCompatActivity
         {
             fab.setVisibility(View.GONE);
             GetDataFromFirebase(true);
+            headerEmail.setText("Your Listings");
             closeDrawer();
             return true;
         });
 
         navigationView.getMenu().findItem(R.id.viewDashboard).setOnMenuItemClickListener(menuItem ->
         {
-            fab.setVisibility(View.VISIBLE);
+            if(!user.type.toLowerCase().equals("admin"))
+            {
+                fab.setVisibility(View.VISIBLE);
+            }
+
             GetDataFromFirebase(false);
+            headerEmail.setText("Dashboard");
             closeDrawer();
             return true;
         });
@@ -255,17 +268,6 @@ public class NavigationDrawer1 extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         }
     }
-/*    public void editAd(View view)
-    {
-        LinearLayout ll = (LinearLayout)findViewById(R.id.adInfoEdit);
-
-        TextView v = (TextView)ll.getChildAt(1);
-
-        Intent intent = new Intent(NavigationDrawer1.this, EditAdvertisement.class);
-        intent.putExtra("adID", view.getId());
-        startActivity(intent);
-    }
-*/
 
     @Override
     public void onBackPressed() {
@@ -357,6 +359,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                         messages.setImageTitle(snapshot.child("title").getValue().toString());
                         messages.setPrice(snapshot.child("price").getValue().toString());
+                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                         //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                         messagesList.add(messages);
                     }
@@ -393,9 +396,10 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                         messages.setImageTitle(snapshot.child("title").getValue().toString());
                         messages.setPrice(snapshot.child("price").getValue().toString());
-                        System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
 
-                        if (myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                        if ((myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                            || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
+                            || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
                         {
                             continue;
                         }
@@ -452,6 +456,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
+                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                             // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                             messagesList.add(messages);
                             // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
@@ -468,10 +473,6 @@ public class NavigationDrawer1 extends AppCompatActivity
                 }
             });
 
-
-
-
-
         }
         else{
 
@@ -486,6 +487,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                         messages.setImageTitle(snapshot.child("title").getValue().toString());
                         messages.setPrice(snapshot.child("price").getValue().toString());
+                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                         //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                         messagesList.add(messages);
                     }
