@@ -44,6 +44,7 @@ public class MyListingsAdapter extends RecyclerAdapter
 			Intent intent = new Intent(mContext, PostAd.class);
 			intent.putExtra("adID", id.getText().toString());
 			intent.putExtra("editAd", true);
+			intent.putExtra("imageURL", adImages.get(id.getText().toString()));
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			mContext.startActivity(intent);
 		});

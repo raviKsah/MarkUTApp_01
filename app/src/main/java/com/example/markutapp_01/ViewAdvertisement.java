@@ -115,8 +115,6 @@ public class ViewAdvertisement extends AppCompatActivity
 
                     String stringURL = intent.getStringExtra("imageURL");
 
-                    System.out.println(stringURL);
-
                     Uri uri = Uri.parse(stringURL);
 
                     Glide.with(ViewAdvertisement.this)
