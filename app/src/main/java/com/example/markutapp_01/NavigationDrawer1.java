@@ -182,23 +182,28 @@ public class NavigationDrawer1 extends AppCompatActivity
         });
         }**/
 
-        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(String query)
+            {
                 searchValue = searchBar.getQuery().toString();
                 System.out.println("Search value"+searchValue);
                 category = categoryList.getSelectedItem().toString();
                 System.out.println("Spinner value" +category);
-                if(!(searchValue.isEmpty())) {
-                    if(currentPage=="Dashboard") {
+                if(!(searchValue.isEmpty()))
+                {
+                    if(currentPage=="Dashboard")
+                    {
                         GetDataFromFirebase(false,searchValue, category);
                     }
-                    else{
+                    else
+                        {
                         GetDataFromFirebase(true,searchValue, category);
                     }
                 }
                 else{
-                    System.out.println("asdfghjkl");
+                    //System.out.println("asdfghjkl");
 
                     category = categoryList.getSelectedItem().toString();
                     if(currentPage=="Dashboard") {
@@ -241,20 +246,24 @@ public class NavigationDrawer1 extends AppCompatActivity
         categoryList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(categoryClicked > 0)
-                {
+                if(categoryClicked > 0) {
                     items = parent.getItemAtPosition(position).toString();
                     System.out.println("categoryyyyyyyyyyyyyyyyyyyy" + items);
-                    if(currentPage=="Dashboard") {
-                    GetDataFromFirebase(false,items);
+                    if (currentPage == "Dashboard") {
+                        GetDataFromFirebase(false, items);
+                    }
+                    else{
+                        GetDataFromFirebase(true,items);
+                    }
                 }
-                else{
-                    GetDataFromFirebase(true,items);
-                }
-                }
+
+
 
                 categoryClicked++;
             }
+
+
+
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -277,6 +286,8 @@ public class NavigationDrawer1 extends AppCompatActivity
         {
             fab.setVisibility(View.GONE);
             currentPage="MyListings";
+            //categoryList.s
+            categoryList.setSelection(0);
             GetDataFromFirebase(true);
             headerEmail.setText("Your Listings");
             closeDrawer();
@@ -291,7 +302,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                 fab.setVisibility(View.VISIBLE);
             }
             currentPage="Dashboard";
-
+            categoryList.setSelection(0);
             GetDataFromFirebase(false);
             headerEmail.setText("Dashboard");
             closeDrawer();
@@ -354,13 +365,18 @@ public class NavigationDrawer1 extends AppCompatActivity
                         ClearAll();
 
                         for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                            Messages messages = new Messages();
-                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                            messages.setImageTitle(snapshot.child("title").getValue().toString());
-                            messages.setPrice(snapshot.child("price").getValue().toString());
-                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
-                            //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                            messagesList.add(messages);
+                            if(Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
+                                continue;
+                            }
+                                Messages messages = new Messages();
+                                messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                messages.setPrice(snapshot.child("price").getValue().toString());
+                                messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+
+                                //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                                messagesList.add(messages);
+
                         }
                         recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter);
@@ -378,16 +394,22 @@ public class NavigationDrawer1 extends AppCompatActivity
                     public void onDataChange(@NonNull DataSnapshot datasnapshot) {
                         ClearAll();
                         for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                            Messages messages = new Messages();
-                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                            messages.setImageTitle(snapshot.child("title").getValue().toString());
-                            messages.setPrice(snapshot.child("price").getValue().toString());
-                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
-                            messagesList.add(messages);
 
-                            ////Fvrt button
+                            if(Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
+                                continue;
+                            }
 
-                        }
+
+                                Messages messages = new Messages();
+                                messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                messages.setPrice(snapshot.child("price").getValue().toString());
+                                messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                messagesList.add(messages);
+
+                            }  ////Fvrt button
+
+
 
                         //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
 
@@ -413,26 +435,25 @@ public class NavigationDrawer1 extends AppCompatActivity
                     public void onDataChange(@NonNull DataSnapshot datasnapshot) {
                         ClearAll();
 
-                        for (DataSnapshot snapshot : datasnapshot.getChildren())
-                    {
-                        Messages messages = new Messages();
-                        messages.setAdID(snapshot.child("ad_id").getValue().toString());
-                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                        messages.setImageTitle(snapshot.child("title").getValue().toString());
-                        messages.setPrice(snapshot.child("price").getValue().toString());
+                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
 
-                        if ((myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
-                            || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
-                            || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
-                        {
-                            continue;
+                            Messages messages = new Messages();
+                            messages.setAdID(snapshot.child("ad_id").getValue().toString());
+                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                            messages.setImageTitle(snapshot.child("title").getValue().toString());
+                            messages.setPrice(snapshot.child("price").getValue().toString());
 
-                        }
+                            if ((!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                                    || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
+                                    || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
+                                continue;
+
+                            }
 
 
                             messagesList.add(messages);
 
-                    
+                        }
 
 
                         myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
@@ -450,7 +471,8 @@ public class NavigationDrawer1 extends AppCompatActivity
 
                     }
                 });
-            }
+                }
+
             else{
                 myRef.orderByChild("category").equalTo(categorySelected).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -460,7 +482,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
                         for (DataSnapshot snapshot : datasnapshot.getChildren()) {
 
-                            System.out.println("rakiiiiiiiiii"+user.email_id);
+                           // System.out.println("rakiiiiiiiiii"+user.email_id);
 
                             Messages messages = new Messages();
                             messages.setImageUrl(snapshot.child("image_path").getValue().toString());
@@ -468,7 +490,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setPrice(snapshot.child("price").getValue().toString());
                             messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
-                            if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                            if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()) || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
                             {
                                 continue;
                             }
@@ -517,7 +539,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                     messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                     System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
 
-                    if (myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                    if ((myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()) )|| Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
                     {
                         continue;
                     }
@@ -562,24 +584,29 @@ public class NavigationDrawer1 extends AppCompatActivity
                             ClearAll();
 
                             for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                                String t = snapshot.child("title").getValue().toString();
-                                String patternString = ".*" + text + ".*";
+                                    String t = snapshot.child("title").getValue().toString();
+                                    String patternString = ".*" + text + ".*";
 
-                                Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
+                                    Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
 
-                                Matcher matcher = pattern.matcher(t);
+                                    Matcher matcher = pattern.matcher(t);
+                                    if(Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())){
+                                    continue;
+                                    }
+
+                                    if (matcher.matches()) {
+                                        Messages messages = new Messages();
+                                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                        messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                        messages.setPrice(snapshot.child("price").getValue().toString());
+                                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                        // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+
+                                        messagesList.add(messages);
+                                        // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
+                                    }
 
 
-                                if (matcher.matches()) {
-                                    Messages messages = new Messages();
-                                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                                    messages.setImageTitle(snapshot.child("title").getValue().toString());
-                                    messages.setPrice(snapshot.child("price").getValue().toString());
-                                    messages.setAdID((snapshot.child("ad_id").getValue().toString()));
-                                    // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                                    messagesList.add(messages);
-                                    // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
-                                }
                             }
                             recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
                             recyclerView.setAdapter(recyclerAdapter1);
@@ -604,24 +631,28 @@ public class NavigationDrawer1 extends AppCompatActivity
                             ClearAll();
 
                             for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                                String t = snapshot.child("title").getValue().toString();
-                                String patternString = ".*" + text + ".*";
 
-                                Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
+                                    String t = snapshot.child("title").getValue().toString();
+                                    String patternString = ".*" + text + ".*";
 
-                                Matcher matcher = pattern.matcher(t);
+                                    Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
 
-
-                                if (matcher.matches()) {
-                                    Messages messages = new Messages();
-                                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                                    messages.setImageTitle(snapshot.child("title").getValue().toString());
-                                    messages.setPrice(snapshot.child("price").getValue().toString());
-                                    messages.setAdID((snapshot.child("ad_id").getValue().toString()));
-                                    // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                                    messagesList.add(messages);
-                                    // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
+                                    Matcher matcher = pattern.matcher(t);
+                                if(Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())){
+                                    continue;
                                 }
+
+                                    if (matcher.matches()) {
+                                        Messages messages = new Messages();
+                                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                        messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                        messages.setPrice(snapshot.child("price").getValue().toString());
+                                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                        // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                                        messagesList.add(messages);
+                                        // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
+                                    }
+
                             }
                             recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
                             recyclerView.setAdapter(recyclerAdapter1);
@@ -646,7 +677,8 @@ public class NavigationDrawer1 extends AppCompatActivity
 
                         for (DataSnapshot snapshot : datasnapshot.getChildren()) {
                             String advertiser=snapshot.child("advertiser").getValue().toString();
-                            if(advertiser==user.email_id) {
+                            Boolean complete=Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString());
+                            if(advertiser==user.email_id && !complete) {
                                 Messages messages = new Messages();
                                 messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                                 messages.setImageTitle(snapshot.child("title").getValue().toString());
@@ -683,6 +715,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                             for (DataSnapshot snapshot : datasnapshot.getChildren()) {
 
 
+
                                 String t = snapshot.child("title").getValue().toString();
                                 String patternString = ".*" + text + ".*";
 
@@ -698,7 +731,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                                     messages.setPrice(snapshot.child("price").getValue().toString());
                                     messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
-                                    if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString())) {
+                                    if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()) || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
                                         continue;
                                     }
 
@@ -748,7 +781,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                                     messages.setPrice(snapshot.child("price").getValue().toString());
                                     messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
-                                    if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString())) {
+                                    if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()) || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
                                         continue;
                                     }
 
@@ -789,7 +822,8 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
                             messages.setAdID((snapshot.child("ad_id").getValue().toString()));
-                            if ( !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                            if ( !user.email_id.equals(snapshot.child("advertiser").getValue().toString()) ||  Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
+
                             {
                                 continue;
                             }
