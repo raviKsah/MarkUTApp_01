@@ -124,14 +124,14 @@ public class NavigationDrawer1 extends AppCompatActivity
 
 
 
-       /** searchBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchBar.setIconified(false);
-                searchValue = searchBar.getQuery().toString();
-                System.out.println("Search value"+searchValue);
-                GetDataFromFirebase(searchValue);
-            }
+        /** searchBar.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+        searchBar.setIconified(false);
+        searchValue = searchBar.getQuery().toString();
+        System.out.println("Search value"+searchValue);
+        GetDataFromFirebase(searchValue);
+        }
         });**/
 
 
@@ -159,17 +159,17 @@ public class NavigationDrawer1 extends AppCompatActivity
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-       /** @Override
+        /** @Override
         public void setOnQueryTextListener(OnQueryTextListener listener) {
-            super.setOnQueryTextListener(listener);
-            this.listener = listener;
-            mSearchSrcTextView = this.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-            mSearchSrcTextView.setOnEditorActionListener((textView, i, keyEvent) -> {
-                if (listener != null) {
-                    listener.onQueryTextSubmit(getQuery().toString());
-                }
-                return true;
-            });
+        super.setOnQueryTextListener(listener);
+        this.listener = listener;
+        mSearchSrcTextView = this.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        mSearchSrcTextView.setOnEditorActionListener((textView, i, keyEvent) -> {
+        if (listener != null) {
+        listener.onQueryTextSubmit(getQuery().toString());
+        }
+        return true;
+        });
         }**/
 
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -355,6 +355,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
+                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                             //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                             messagesList.add(messages);
                         }
@@ -371,25 +372,28 @@ public class NavigationDrawer1 extends AppCompatActivity
             } else {
                 myRef.orderByChild("category").equalTo(categorySelected).addValueEventListener(new ValueEventListener() {
                     @Override
+                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                        ClearAll();
+                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                            Messages messages = new Messages();
+                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                            messages.setImageTitle(snapshot.child("title").getValue().toString());
+                            messages.setPrice(snapshot.child("price").getValue().toString());
+                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                            messagesList.add(messages);
 
-                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                        Messages messages = new Messages();
-                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                        messages.setImageTitle(snapshot.child("title").getValue().toString());
-                        messages.setPrice(snapshot.child("price").getValue().toString());
-                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                            ////Fvrt button
 
-
-                        ////Fvrt button
-
-
+                        }
 
                         //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                        messagesList.add(messages);
-                         recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
+
+                        recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter);
                         recyclerAdapter.notifyDataSetChanged();
                     }
+
+
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
@@ -409,10 +413,11 @@ public class NavigationDrawer1 extends AppCompatActivity
                         for (DataSnapshot snapshot : datasnapshot.getChildren()) {
                             String advertiser = snapshot.child("advertiser").getValue().toString();
 
-                                Messages messages = new Messages();
-                                messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                                messages.setImageTitle(snapshot.child("title").getValue().toString());
-                                messages.setPrice(snapshot.child("price").getValue().toString());
+                            Messages messages = new Messages();
+                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                            messages.setImageTitle(snapshot.child("title").getValue().toString());
+                            messages.setPrice(snapshot.child("price").getValue().toString());
+                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
 
                             if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
@@ -424,27 +429,19 @@ public class NavigationDrawer1 extends AppCompatActivity
                         }
 
 
-                            myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
-                            recyclerView.setAdapter(myListingAdapter);
-                            myListingAdapter.notifyDataSetChanged();
+                        myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                        recyclerView.setAdapter(myListingAdapter);
+                        myListingAdapter.notifyDataSetChanged();
 
 
 
 
-                        }
+                    }
 
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
-                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                        Messages messages = new Messages();
-                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                        messages.setImageTitle(snapshot.child("title").getValue().toString());
-                        messages.setPrice(snapshot.child("price").getValue().toString());
-                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
-                        //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                        messagesList.add(messages);
                     }
                 });
             }
@@ -459,23 +456,24 @@ public class NavigationDrawer1 extends AppCompatActivity
 
                             System.out.println("rakiiiiiiiiii"+user.email_id);
 
-                                Messages messages = new Messages();
-                                messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                                messages.setImageTitle(snapshot.child("title").getValue().toString());
-                                messages.setPrice(snapshot.child("price").getValue().toString());
+                            Messages messages = new Messages();
+                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                            messages.setImageTitle(snapshot.child("title").getValue().toString());
+                            messages.setPrice(snapshot.child("price").getValue().toString());
+                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
-                                if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
-                                {
-                                    continue;
-                                }
-
-                                messagesList.add(messages);
+                            if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                            {
+                                continue;
                             }
 
+                            messagesList.add(messages);
+                        }
 
-                                myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
-                                recyclerView.setAdapter(myListingAdapter);
-                                myListingAdapter.notifyDataSetChanged();
+
+                        myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                        recyclerView.setAdapter(myListingAdapter);
+                        myListingAdapter.notifyDataSetChanged();
 
 
 
@@ -494,54 +492,55 @@ public class NavigationDrawer1 extends AppCompatActivity
 
     private void GetDataFromFirebase(boolean myListing)
     {
-            myRef.addValueEventListener(new ValueEventListener()
+        myRef.addValueEventListener(new ValueEventListener()
+        {
+
+            public void onDataChange(@NonNull DataSnapshot datasnapshot)
+            {
+                ClearAll();
+
+                User_Details user = global.getUser();
+
+                for (DataSnapshot snapshot : datasnapshot.getChildren())
+                {
+                    Messages messages = new Messages();
+                    messages.setAdID(snapshot.child("ad_id").getValue().toString());
+                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                    messages.setImageTitle(snapshot.child("title").getValue().toString());
+                    messages.setPrice(snapshot.child("price").getValue().toString());
+                    messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                    System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+
+                    if (myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                    {
+                        continue;
+                    }
+
+                    messagesList.add(messages);
+                }
+
+                if (myListing)
+                {
+                    myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                    recyclerView.setAdapter(myListingAdapter);
+                    myListingAdapter.notifyDataSetChanged();
+                }
+
+                else
+                {
+                    recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
+                    recyclerView.setAdapter(recyclerAdapter);
+                    recyclerAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error)
             {
 
-                public void onDataChange(@NonNull DataSnapshot datasnapshot)
-                {
-                    ClearAll();
-
-                    User_Details user = global.getUser();
-
-                    for (DataSnapshot snapshot : datasnapshot.getChildren())
-                    {
-                        Messages messages = new Messages();
-                        messages.setAdID(snapshot.child("ad_id").getValue().toString());
-                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                        messages.setImageTitle(snapshot.child("title").getValue().toString());
-                        messages.setPrice(snapshot.child("price").getValue().toString());
-                        System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-
-                        if (myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
-                        {
-                            continue;
-                        }
-
-                        messagesList.add(messages);
-                    }
-
-                    if (myListing)
-                    {
-                        myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
-                        recyclerView.setAdapter(myListingAdapter);
-                        myListingAdapter.notifyDataSetChanged();
-                    }
-
-                    else
-                     {
-                        recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
-                        recyclerView.setAdapter(recyclerAdapter);
-                        recyclerAdapter.notifyDataSetChanged();
-                     }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error)
-                {
-
-                }
-            });
-        }
+            }
+        });
+    }
 
     private void GetDataFromFirebase(boolean list,String text, String categoryItem) {
         User_Details user = global.getUser();
@@ -564,15 +563,92 @@ public class NavigationDrawer1 extends AppCompatActivity
 
                                 Matcher matcher = pattern.matcher(t);
 
-                        if (matcher.matches()) {
-                            Messages messages = new Messages();
-                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                            messages.setImageTitle(snapshot.child("title").getValue().toString());
-                            messages.setPrice(snapshot.child("price").getValue().toString());
-                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
-                            // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                            messagesList.add(messages);
-                            // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
+
+                                if (matcher.matches()) {
+                                    Messages messages = new Messages();
+                                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                    messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                    messages.setPrice(snapshot.child("price").getValue().toString());
+                                    messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                    // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                                    messagesList.add(messages);
+                                    // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
+                                }
+                            }
+                            recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
+                            recyclerView.setAdapter(recyclerAdapter1);
+                            recyclerAdapter1.notifyDataSetChanged();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }else {
+                    //Query query=myRef.child();
+                    System.out.println("searchhhhhhhhhhhhhhhhh" + categoryItem);
+                    myRef.orderByChild("category").equalTo(categoryItem).addValueEventListener(new ValueEventListener() {
+
+                        @Override
+
+                        public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                            ClearAll();
+
+                            for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                                String t = snapshot.child("title").getValue().toString();
+                                String patternString = ".*" + text + ".*";
+
+                                Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
+
+                                Matcher matcher = pattern.matcher(t);
+
+
+                                if (matcher.matches()) {
+                                    Messages messages = new Messages();
+                                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                    messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                    messages.setPrice(snapshot.child("price").getValue().toString());
+                                    messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                    // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                                    messagesList.add(messages);
+                                    // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
+                                }
+                            }
+                            recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
+                            recyclerView.setAdapter(recyclerAdapter1);
+                            recyclerAdapter1.notifyDataSetChanged();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+            } else {
+
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+
+                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                        ClearAll();
+
+                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                            String advertiser=snapshot.child("advertiser").getValue().toString();
+                            if(advertiser==user.email_id) {
+                                Messages messages = new Messages();
+                                messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                                messages.setImageTitle(snapshot.child("title").getValue().toString());
+                                messages.setPrice(snapshot.child("price").getValue().toString());
+                                messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                                messagesList.add(messages);
+                            }
                         }
                         recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter);
@@ -614,6 +690,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                                     messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                                     messages.setImageTitle(snapshot.child("title").getValue().toString());
                                     messages.setPrice(snapshot.child("price").getValue().toString());
+                                    messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
                                     if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString())) {
                                         continue;
@@ -663,6 +740,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                                     messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                                     messages.setImageTitle(snapshot.child("title").getValue().toString());
                                     messages.setPrice(snapshot.child("price").getValue().toString());
+                                    messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
                                     if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString())) {
                                         continue;
@@ -704,6 +782,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
+                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                             if ( !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
                             {
                                 continue;
@@ -713,18 +792,10 @@ public class NavigationDrawer1 extends AppCompatActivity
                         }
 
 
-                            myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
-                            recyclerView.setAdapter(myListingAdapter);
-                            myListingAdapter.notifyDataSetChanged();
+                        myListingAdapter = new MyListingsAdapter(getApplicationContext(), messagesList);
+                        recyclerView.setAdapter(myListingAdapter);
+                        myListingAdapter.notifyDataSetChanged();
 
-                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                        Messages messages = new Messages();
-                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                        messages.setImageTitle(snapshot.child("title").getValue().toString());
-                        messages.setPrice(snapshot.child("price").getValue().toString());
-                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
-                        //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                        messagesList.add(messages);
                     }
 
                     @Override
@@ -741,44 +812,44 @@ public class NavigationDrawer1 extends AppCompatActivity
 
 
 
-    public void reportChecker(final String postkey) {
+    /** public void reportChecker(final String postkey) {
 
-//        myRef = database.getReference("under_report");
-//        myRef.orderByChild("under_report");
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+     //        myRef = database.getReference("under_report");
+     //        myRef.orderByChild("under_report");
+     //        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
      //      final String uid = user.getUid();
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+     myRef.addValueEventListener(new ValueEventListener() {
+    @Override
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                if (snapshot.child(postkey).hasChild("")){
-                    report_btn_logo.setImageResource(R.drawable.ic_baseline_flag_24);
-                }else {
-                    report_btn_logo.setImageResource(R.drawable.ic_baseline_outlined_flag_24);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+    if (snapshot.child(postkey).hasChild("")){
+    report_btn_logo.setImageResource(R.drawable.ic_baseline_flag_24);
+    }else {
+    report_btn_logo.setImageResource(R.drawable.ic_baseline_outlined_flag_24);
+    }
 
     }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError error) {
+
+    }
+    });
+
+     }**/
 
 
 
     private void ClearAll () {
-            if (messagesList != null) {
-                messagesList.clear();
-                if (recyclerAdapter != null) {
-                    recyclerAdapter.notifyDataSetChanged();
-                }
+        if (messagesList != null) {
+            messagesList.clear();
+            if (recyclerAdapter != null) {
+                recyclerAdapter.notifyDataSetChanged();
             }
-            messagesList = new ArrayList<>();
         }
+        messagesList = new ArrayList<>();
+    }
 
 
     public void displayAdvertisementCategories()
