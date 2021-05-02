@@ -359,6 +359,8 @@ public class NavigationDrawer1 extends AppCompatActivity
                         messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                         //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                         messagesList.add(messages);
+
+                        Collections.reverse(messagesList);
                     }
                     recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                     recyclerView.setAdapter(recyclerAdapter);
