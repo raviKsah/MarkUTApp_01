@@ -7,20 +7,24 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/sell"
-            android:icon="@android:drawable/ic_menu_edit"
+            android:icon="@drawable/ic_baseline_edit_24"
+            app:iconTint="?attr/colorPrimary"
             android:title="Sell" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/baseline_analytics_24"
+            android:iconTint="?attr/colorPrimary"
             android:title="@string/menu_gallery" />
 
         <item
             android:id="@+id/viewDashboard"
             android:icon="@drawable/ic_home_tab"
+            android:iconTint="?attr/colorPrimary"
             android:title="View Dashboard" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_logout_24dp"
+            android:iconTint="?attr/colorPrimary"
             android:title="Logout" />
     </group>
 </menu>

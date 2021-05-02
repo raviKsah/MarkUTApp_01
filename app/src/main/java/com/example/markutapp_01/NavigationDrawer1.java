@@ -116,9 +116,15 @@ public class NavigationDrawer1 extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         TextView headerUser = (TextView) headerView.findViewById(R.id.textView100);
         TextView headerEmail = (TextView) headerView.findViewById(R.id.textView101);
-        headerUser.setText("Hello, " + global.getUser().getFirst_name() + " " + global.getUser().getLast_name());
-        headerEmail.setText("Dashboard");
 
+        if(user.type.toLowerCase().equals("admin"))
+        {
+            headerUser.setText("Hello, " + global.getUser().getFirst_name() + " " + global.getUser().getLast_name()+" (Admin)");
+        }
+        else{
+            headerUser.setText("Hello, " + global.getUser().getFirst_name() + " " + global.getUser().getLast_name());
+
+        }
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
