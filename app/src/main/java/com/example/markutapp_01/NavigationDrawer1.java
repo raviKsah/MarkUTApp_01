@@ -437,6 +437,14 @@ public class NavigationDrawer1 extends AppCompatActivity
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
+                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                        Messages messages = new Messages();
+                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                        messages.setImageTitle(snapshot.child("title").getValue().toString());
+                        messages.setPrice(snapshot.child("price").getValue().toString());
+                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                        //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                        messagesList.add(messages);
                     }
                 });
             }
@@ -556,89 +564,15 @@ public class NavigationDrawer1 extends AppCompatActivity
 
                                 Matcher matcher = pattern.matcher(t);
 
-
-                                if (matcher.matches()) {
-                                    Messages messages = new Messages();
-                                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                                    messages.setImageTitle(snapshot.child("title").getValue().toString());
-                                    messages.setPrice(snapshot.child("price").getValue().toString());
-                                    // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                                    messagesList.add(messages);
-                                    // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
-                                }
-                            }
-                            recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
-                            recyclerView.setAdapter(recyclerAdapter1);
-                            recyclerAdapter1.notifyDataSetChanged();
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-                }else {
-                    //Query query=myRef.child();
-                    System.out.println("searchhhhhhhhhhhhhhhhh" + categoryItem);
-                    myRef.orderByChild("category").equalTo(categoryItem).addValueEventListener(new ValueEventListener() {
-
-                        @Override
-
-                        public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                            ClearAll();
-
-                            for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                                String t = snapshot.child("title").getValue().toString();
-                                String patternString = ".*" + text + ".*";
-
-                                Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
-
-                                Matcher matcher = pattern.matcher(t);
-
-
-                                if (matcher.matches()) {
-                                    Messages messages = new Messages();
-                                    messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                                    messages.setImageTitle(snapshot.child("title").getValue().toString());
-                                    messages.setPrice(snapshot.child("price").getValue().toString());
-                                    // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                                    messagesList.add(messages);
-                                    // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
-                                }
-                            }
-                            recyclerAdapter1 = new RecyclerAdapter(getApplicationContext(), messagesList);
-                            recyclerView.setAdapter(recyclerAdapter1);
-                            recyclerAdapter1.notifyDataSetChanged();
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-                }
-            } else {
-
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-
-                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                        ClearAll();
-
-                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                            String advertiser=snapshot.child("advertiser").getValue().toString();
-                            if(advertiser==user.email_id) {
-                                Messages messages = new Messages();
-                                messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                                messages.setImageTitle(snapshot.child("title").getValue().toString());
-                                messages.setPrice(snapshot.child("price").getValue().toString());
-                                //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
-                                messagesList.add(messages);
-                            }
+                        if (matcher.matches()) {
+                            Messages messages = new Messages();
+                            messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                            messages.setImageTitle(snapshot.child("title").getValue().toString());
+                            messages.setPrice(snapshot.child("price").getValue().toString());
+                            messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                            // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                            messagesList.add(messages);
+                            // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
                         }
                         recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter);
@@ -783,6 +717,14 @@ public class NavigationDrawer1 extends AppCompatActivity
                             recyclerView.setAdapter(myListingAdapter);
                             myListingAdapter.notifyDataSetChanged();
 
+                    for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                        Messages messages = new Messages();
+                        messages.setImageUrl(snapshot.child("image_path").getValue().toString());
+                        messages.setImageTitle(snapshot.child("title").getValue().toString());
+                        messages.setPrice(snapshot.child("price").getValue().toString());
+                        messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                        //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                        messagesList.add(messages);
                     }
 
                     @Override
