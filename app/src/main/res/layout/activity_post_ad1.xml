@@ -34,11 +34,12 @@
 
 
                 <TextView
+                    android:id="@+id/postAdTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif-medium"
-                    android:paddingLeft="0dp"
                     android:gravity="center"
+                    android:paddingLeft="0dp"
                     android:text="Post Advertisement"
                     android:textSize="20dp"
                     android:textStyle="bold"

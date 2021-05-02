@@ -37,8 +37,9 @@ public class MyListingsAdapter extends RecyclerAdapter
 		edit.setOnClickListener((View.OnClickListener) v ->
 		{
 			TextView id = (TextView)view.findViewById(R.id.editAdID);
-			Intent intent = new Intent(mContext, EditAdvertisement.class);
+			Intent intent = new Intent(mContext, PostAd.class);
 			intent.putExtra("adID", id.getText().toString());
+			intent.putExtra("editAd", true);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			mContext.startActivity(intent);
 		});
