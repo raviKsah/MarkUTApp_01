@@ -6,18 +6,20 @@ public class Messages {
     String title;
     String image_path;
     String price;
+    String date;
     //constructors
 
 
     public Messages() {
     }
 
-    public Messages(String adID, String imageDesc, String imageTitle, String imageUrl, String price) {
+    public Messages(String adID, String imageDesc, String imageTitle, String imageUrl, String price, String date) {
         this.adID = adID;
         this.description = imageDesc;
         this.title = imageTitle;
         this.image_path = imageUrl;
         this.price = price;
+        this.date = date;
     }
 
     public String getAdID()
@@ -60,5 +62,15 @@ public class Messages {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getDate()
+    {
+        return date;
+    }
+
+    public void setDate(String date)
+    {
+        this.date = date;
     }
 }

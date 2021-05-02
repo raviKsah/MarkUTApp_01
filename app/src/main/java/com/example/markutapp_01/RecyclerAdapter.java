@@ -21,8 +21,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_01.RecyclerAdapter.ViewHolder> {
@@ -181,6 +186,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
         holder.textView.setText(messagesList.get(position).getImageTitle());
         holder.price.setText(messagesList.get(position).getPrice());
         holder.adId.setText(messagesList.get(position).getAdID());
+        String newDate = null;
+        try
+        {
+            newDate = convertDateFormat(messagesList.get(position).getDate());
+        } catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+        holder.date.setText(newDate);
         Glide.with(mContext).load(messagesList.get(position).getImageUrl()).into(holder.imageView);
 
         adImages.put(messagesList.get(position).getAdID(), messagesList.get(position).getImageUrl());
@@ -207,9 +221,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
         return messagesList.size();
     }
 
+    public String convertDateFormat(String date) throws ParseException
+    {
+        String newDate = "";
+
+        DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+
+        Date inputDate = inputFormat.parse(date);
+
+        newDate = outputFormat.format(inputDate);
+
+        return newDate;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
-        TextView textView,price,edit;
+        TextView textView,price,edit,date;
         ImageButton report_btn_logo;
         TextView adId;
 
@@ -222,6 +250,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
             edit = itemView.findViewById(R.id.editAdID);
             adId = itemView.findViewById(R.id.adID);
             report_btn_logo = itemView.findViewById(R.id.report_btn_logo);
+            date = itemView.findViewById(R.id.view_dashboard_date);
 
         }
 

@@ -66,6 +66,8 @@ public class NavigationDrawer1 extends AppCompatActivity
     // Combined with user type this is a way to prevent all ads from loading on
     // initially logging in.
     int categoryClicked = 0;
+    
+    TextView appTitle = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,8 @@ public class NavigationDrawer1 extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         categoryList = (Spinner) findViewById(R.id.searchCategories);
+        
+        appTitle = findViewById(R.id.appTitle);
 
 //        firebaseAuth = FirebaseDatabase.getInstance().getReference("Advertisements");
 
@@ -295,7 +299,7 @@ public class NavigationDrawer1 extends AppCompatActivity
             //categoryList.s
             categoryList.setSelection(0);
             GetDataFromFirebase(true);
-            headerEmail.setText("Your Listings");
+            appTitle.setText(user.first_name + "'s Listings");
             closeDrawer();
             return true;
         });
@@ -309,7 +313,8 @@ public class NavigationDrawer1 extends AppCompatActivity
             currentPage="Dashboard";
             categoryList.setSelection(0);
             GetDataFromFirebase(false);
-            headerEmail.setText("Dashboard");
+            appTitle.setText(currentPage);
+
             closeDrawer();
             return true;
         });
@@ -363,7 +368,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
         if(!list) {
             if (categorySelected.equals("All")) {
-                myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
+                myRef.orderByChild("edited_date").addValueEventListener(new ValueEventListener() {
                     @Override
 
                     public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -379,6 +384,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
                             messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                            messages.setDate((snapshot.child("edited_date").getValue().toString()));
 
                             //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                             messagesList.add(messages);
@@ -418,6 +424,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
                             messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                            messages.setDate((snapshot.child("edited_date").getValue().toString()));
                             messagesList.add(messages);
 
                         }
@@ -443,7 +450,7 @@ public class NavigationDrawer1 extends AppCompatActivity
         else
         {
             if(categorySelected.equals("All")) {
-                myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
+                myRef.orderByChild("edited_date").addValueEventListener(new ValueEventListener() {
                     @Override
 
                     public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -456,6 +463,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
+                            messages.setDate((snapshot.child("edited_date").getValue().toString()));
 
                             if ((!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
                                     || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
@@ -500,6 +508,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
                             messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                            messages.setDate((snapshot.child("edited_date").getValue().toString()));
 
                             if ((list && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
                                     || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
@@ -533,7 +542,7 @@ public class NavigationDrawer1 extends AppCompatActivity
 
     private void GetDataFromFirebase(boolean myListing)
     {
-        myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
+        myRef.orderByChild("edited_date").addValueEventListener(new ValueEventListener() {
 
             public void onDataChange(@NonNull DataSnapshot datasnapshot)
             {
@@ -548,7 +557,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                     messages.setImageUrl(snapshot.child("image_path").getValue().toString());
                     messages.setImageTitle(snapshot.child("title").getValue().toString());
                     messages.setPrice(snapshot.child("price").getValue().toString());
-                    messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                    messages.setDate((snapshot.child("edited_date").getValue().toString()));
                     System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
 
                     if ((myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
@@ -592,7 +601,7 @@ public class NavigationDrawer1 extends AppCompatActivity
         if(!list) {
             if (!text.isEmpty()) {
                 if(categoryItem.equals("All")){
-                    myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
+                    myRef.orderByChild("edited_date").addValueEventListener(new ValueEventListener() {
 
                         @Override
 
@@ -618,6 +627,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                                     messages.setImageTitle(snapshot.child("title").getValue().toString());
                                     messages.setPrice(snapshot.child("price").getValue().toString());
                                     messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                    messages.setDate((snapshot.child("edited_date").getValue().toString()));
                                     // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
 
                                     messagesList.add(messages);
@@ -670,6 +680,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                                     messages.setImageTitle(snapshot.child("title").getValue().toString());
                                     messages.setPrice(snapshot.child("price").getValue().toString());
                                     messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                    messages.setDate((snapshot.child("edited_date").getValue().toString()));
                                     // System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                                     messagesList.add(messages);
                                     // System.out.println("sizeeeeeeeeee"+messages.getImageUrl());
@@ -694,7 +705,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                 }
             } else {
 
-                myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
+                myRef.orderByChild("edited_date").addValueEventListener(new ValueEventListener() {
                     @Override
 
                     public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -709,6 +720,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                                 messages.setImageTitle(snapshot.child("title").getValue().toString());
                                 messages.setPrice(snapshot.child("price").getValue().toString());
                                 messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                messages.setDate((snapshot.child("edited_date").getValue().toString()));
                                 //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
                                 messagesList.add(messages);
                             }
@@ -733,7 +745,7 @@ public class NavigationDrawer1 extends AppCompatActivity
             if(!text.isEmpty()) {
                 if(categoryItem.equals("All")){
                     System.out.println("searchhhhhhhhhhhhhhhhh" + categoryItem);
-                    myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
+                    myRef.orderByChild("edited_date").addValueEventListener(new ValueEventListener() {
 
                         @Override
 
@@ -758,6 +770,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                                     messages.setImageTitle(snapshot.child("title").getValue().toString());
                                     messages.setPrice(snapshot.child("price").getValue().toString());
                                     messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                    messages.setDate((snapshot.child("edited_date").getValue().toString()));
 
                                     if ((!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
                                             || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
@@ -811,6 +824,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                                     messages.setImageTitle(snapshot.child("title").getValue().toString());
                                     messages.setPrice(snapshot.child("price").getValue().toString());
                                     messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                                    messages.setDate((snapshot.child("edited_date").getValue().toString()));
 
                                     if ((!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
                                             || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
@@ -844,7 +858,7 @@ public class NavigationDrawer1 extends AppCompatActivity
             }
             else{
 
-                myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
+                myRef.orderByChild("edited_date").addValueEventListener(new ValueEventListener() {
                     @Override
 
                     public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -856,6 +870,7 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
                             messages.setAdID((snapshot.child("ad_id").getValue().toString()));
+                            messages.setDate((snapshot.child("edited_date").getValue().toString()));
                             if ((!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
                                     || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
                                     || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {

@@ -236,7 +236,7 @@ public class PostAd extends AppCompatActivity {
         {
             String newTitle = "Edit Advertisement";
             getAdDetails();
-            TextView adTitle = (TextView)findViewById(R.id.postAdTitle);
+            TextView adTitle = (TextView)findViewById(R.id.appTitle);
             adTitle.setText(newTitle);
             postAdd.setText(newTitle);
             deactivate.setVisibility(View.VISIBLE);
@@ -374,7 +374,7 @@ public class PostAd extends AppCompatActivity {
                     {
                         datas.child("is_complete").getRef().setValue(true);
                         datas.child("date_completed").getRef().setValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date()));
-                        datas.child("edit_date").getRef().setValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date()));
+                        datas.child("edited_date").getRef().setValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date()));
                         datas.child("was_edited").getRef().setValue(true);
                     }
 
@@ -382,7 +382,7 @@ public class PostAd extends AppCompatActivity {
                     {
                         datas.child("category").getRef().setValue(PostCategorySpinner.getText().toString());
                         datas.child("description").getRef().setValue(description.getText().toString());
-                        datas.child("edit_date").getRef().setValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date()));
+                        datas.child("edited_date").getRef().setValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date()));
                         datas.child("editor").getRef().setValue(user.email_id);
                         datas.child("price").getRef().setValue(price.getText().toString());
                         datas.child("title").getRef().setValue(title.getText().toString());
@@ -444,7 +444,7 @@ public class PostAd extends AppCompatActivity {
                                         String cost = price.getText().toString().trim();
                                         String createdDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date());
                                         String creator = session.getusename();
-                                        String editedDate = "";
+                                        String editedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date());
                                         Boolean isComplete = false;
                                         Boolean underReport = false;
                                         Boolean wasEdited = false;
