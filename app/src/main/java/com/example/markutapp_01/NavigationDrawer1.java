@@ -370,7 +370,8 @@ public class NavigationDrawer1 extends AppCompatActivity
                         ClearAll();
 
                         for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                            if(Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
+                            if (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString())
+                                    || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())){
                                 continue;
                             }
                             Messages messages = new Messages();
@@ -383,6 +384,9 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messagesList.add(messages);
 
                         }
+
+                        Collections.reverse(messagesList);
+
                         recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter);
                         recyclerAdapter.notifyDataSetChanged();
@@ -394,22 +398,20 @@ public class NavigationDrawer1 extends AppCompatActivity
                     }
                 });
             } else {
-                myRef.orderByChild("category").equalTo(categorySelected).addValueEventListener(new ValueEventListener() {
+                myRef.orderByChild("category").equalTo(categorySelected).addValueEventListener(new ValueEventListener()
+                {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot datasnapshot)
+                    {
                         ClearAll();
-                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                        for (DataSnapshot snapshot : datasnapshot.getChildren())
+                        {
 
-                            if(Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
+                            if (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString())
+                                    || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
+                            {
                                 continue;
                             }
-
-                                Messages messages = new Messages();
-                                messages.setImageUrl(snapshot.child("image_path").getValue().toString());
-                                messages.setImageTitle(snapshot.child("title").getValue().toString());
-                                messages.setPrice(snapshot.child("price").getValue().toString());
-                                messages.setAdID((snapshot.child("ad_id").getValue().toString()));
-                                messagesList.add(messages);
 
                             Messages messages = new Messages();
                             messages.setImageUrl(snapshot.child("image_path").getValue().toString());
@@ -418,11 +420,9 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                             messagesList.add(messages);
 
-                        }  ////Fvrt button
+                        }
 
-
-
-                        //  System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
+                        Collections.reverse(messagesList);
 
                         recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter);
@@ -438,7 +438,10 @@ public class NavigationDrawer1 extends AppCompatActivity
                 });
 
             }
-        }else{
+        }
+
+        else
+        {
             if(categorySelected.equals("All")) {
                 myRef.orderByChild("date_created").addValueEventListener(new ValueEventListener() {
                     @Override
@@ -501,7 +504,9 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setPrice(snapshot.child("price").getValue().toString());
                             messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
-                            if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()) || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
+                            if ((list && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                                    || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
+                                    || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
                             {
                                 continue;
                             }
@@ -549,7 +554,9 @@ public class NavigationDrawer1 extends AppCompatActivity
                     messages.setAdID((snapshot.child("ad_id").getValue().toString()));
                     System.out.println("heyyyyyyyyy" + snapshot.child("image_path").getValue().toString());
 
-                    if ((myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()) )|| Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
+                    if ((myListing && !user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                            || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
+                            || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
                     {
                         continue;
                     }
@@ -602,7 +609,9 @@ public class NavigationDrawer1 extends AppCompatActivity
                                 Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
 
                                 Matcher matcher = pattern.matcher(t);
-                                if(Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())){
+
+                                if (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString())
+                                        || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())){
                                     continue;
                                 }
 
@@ -653,7 +662,8 @@ public class NavigationDrawer1 extends AppCompatActivity
                                 Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
 
                                 Matcher matcher = pattern.matcher(t);
-                                if(Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())){
+                                if (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString())
+                                        || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())){
                                     continue;
                                 }
 
@@ -706,6 +716,9 @@ public class NavigationDrawer1 extends AppCompatActivity
                                 messagesList.add(messages);
                             }
                         }
+
+                        Collections.reverse(messagesList);
+
                         recyclerAdapter = new RecyclerAdapter(getApplicationContext(), messagesList);
                         recyclerView.setAdapter(recyclerAdapter);
                         recyclerAdapter.notifyDataSetChanged();
@@ -749,7 +762,9 @@ public class NavigationDrawer1 extends AppCompatActivity
                                     messages.setPrice(snapshot.child("price").getValue().toString());
                                     messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
-                                    if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()) || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
+                                    if ((!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                                            || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
+                                            || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
                                         continue;
                                     }
 
@@ -800,7 +815,9 @@ public class NavigationDrawer1 extends AppCompatActivity
                                     messages.setPrice(snapshot.child("price").getValue().toString());
                                     messages.setAdID((snapshot.child("ad_id").getValue().toString()));
 
-                                    if (!user.email_id.equals(snapshot.child("advertiser").getValue().toString()) || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
+                                    if ((!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                                            || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
+                                            || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
                                         continue;
                                     }
 
@@ -842,9 +859,10 @@ public class NavigationDrawer1 extends AppCompatActivity
                             messages.setImageTitle(snapshot.child("title").getValue().toString());
                             messages.setPrice(snapshot.child("price").getValue().toString());
                             messages.setAdID((snapshot.child("ad_id").getValue().toString()));
-                            if ( !user.email_id.equals(snapshot.child("advertiser").getValue().toString()) ||  Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString()))
+                            if ((!user.email_id.equals(snapshot.child("advertiser").getValue().toString()))
+                                    || (user.type.toLowerCase().equals("admin") && !Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
+                                    || Boolean.parseBoolean(snapshot.child("is_complete").getValue().toString())) {
 
-                            {
                                 continue;
                             }
 
@@ -869,16 +887,6 @@ public class NavigationDrawer1 extends AppCompatActivity
             }
         }
     }
-
-    @Override
-    public void onCancelled(@NonNull DatabaseError error) {
-
-    }
-    });
-
-     }**/
-
-
 
 
     /** public void reportChecker(final String postkey) {
