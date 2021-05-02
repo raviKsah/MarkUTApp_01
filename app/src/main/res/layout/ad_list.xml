@@ -48,14 +48,12 @@
             <LinearLayout
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textSize="20sp"
-                    android:layout_marginLeft="5dp"
                     android:layout_gravity="center"
                     android:text="$"
                     android:textColor="@android:color/darker_gray" />
@@ -64,11 +62,12 @@
                 <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="20sp" android:layout_marginLeft="2dp"
+                android:textSize="20sp"
                 android:textColor="@android:color/black"
                 android:id="@+id/ad_price"
+                    android:layout_marginLeft="2dp"
                 android:hint="null"
-                    android:layout_marginStart="2dp" />
+           />
 
 
 
@@ -99,16 +98,16 @@
                 android:textColor="@android:color/black"
                 android:id="@+id/ad_title"
                 android:textStyle="bold"
+                android:layout_marginTop="5dp"
                 android:hint="Null"
-                android:padding="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingStart="5dp"
-                android:paddingLeft="5dp" />
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Last updated on"
+                android:layout_marginTop="5dp"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="italic"
                 />
