@@ -198,14 +198,14 @@ public class PostAd extends AppCompatActivity {
 
                 if(!description.getText().toString().trim().isEmpty())
                 {
-                    isTitleValid = true;
+                    isDescValid = true;
                 }
                 else
                 {
                     Toast.makeText(getApplicationContext(), "Advertisement must have description! ", Toast.LENGTH_LONG).show();
                 }
 
-                if (!category.isEmpty())//.toString().trim().isEmpty())
+                if (!PostCategorySpinner.getText().toString().trim().isEmpty())
                 {
                     isCategoryValid = true;
                 }
