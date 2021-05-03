@@ -101,6 +101,7 @@ public class NavigationDrawer1 extends AppCompatActivity
         if(user.type.toLowerCase().equals("admin"))
         {
             fab.setVisibility(View.GONE);
+            appTitle.setText("Reports");
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -297,21 +298,26 @@ public class NavigationDrawer1 extends AppCompatActivity
             //categoryList.s
             categoryList.setSelection(0);
             GetDataFromFirebase(true);
-            appTitle.setText(user.first_name + "'s Listings");
+            if(!global.getUser().type.toLowerCase().equals("admin"))
+            {
+                appTitle.setText(user.first_name + "'s Listings");
+            }
             closeDrawer();
             return true;
         });
 
         navigationView.getMenu().findItem(R.id.viewDashboard).setOnMenuItemClickListener(menuItem ->
         {
+            currentPage="Dashboard";
+
             if(!user.type.toLowerCase().equals("admin"))
             {
                 fab.setVisibility(View.VISIBLE);
+                appTitle.setText(currentPage);
             }
-            currentPage="Dashboard";
+
             categoryList.setSelection(0);
             GetDataFromFirebase(false);
-            appTitle.setText(currentPage);
 
             closeDrawer();
             return true;
@@ -348,7 +354,9 @@ public class NavigationDrawer1 extends AppCompatActivity
 
             MenuItem sell = navigationView.getMenu().findItem(R.id.sell);
             MenuItem myListings = navigationView.getMenu().findItem(R.id.nav_gallery);
+            MenuItem view = navigationView.getMenu().findItem(R.id.viewDashboard);
 
+            view.setTitle("View Reports");
             sell.setVisible(false);
             myListings.setVisible(false);
         }
