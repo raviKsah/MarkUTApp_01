@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -42,5 +42,9 @@
         <item name="android:shadowDx">0</item>
         <item name="android:shadowDy">0</item>
         <item name="android:shadowRadius">0</item>
+    </style>
+
+    <style name="AppTheme1" parent="Theme.MaterialComponents.NoActionBar" tools:ignore="DuplicateDefinition">
+        ...
     </style>
 </resources>

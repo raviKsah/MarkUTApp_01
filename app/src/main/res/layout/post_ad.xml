@@ -117,9 +117,10 @@
 
         <Switch
             android:id="@+id/deactivate"
+            android:layout_marginLeft="45dp"
             android:layout_width="wrap_content"
             android:layout_height="106dp"
-            android:text="   Deactivate Ad" />
+            android:text="Deactivate Ad" />
 
 
     </LinearLayout>
