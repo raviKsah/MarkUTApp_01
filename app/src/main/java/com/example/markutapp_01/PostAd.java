@@ -86,7 +86,7 @@ public class PostAd extends AppCompatActivity {
 
     public static final String [] PostCategory =
             {
-                    "Apparel","Appliances","Books","Computers", "Electronics", "Home & Garden","Pet Supplies","Sports","Toys & Games", "Vehicle","Other"
+                    "Apparel","Appliances","Books","Computers", "Electronics", "Home & Garden","Pet Supplies","Sports","Toys & Games", "Vehicles","Other"
             };
 
     @Override
