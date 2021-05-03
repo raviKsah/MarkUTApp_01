@@ -63,9 +63,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
        // ImageView reportLogo = (ImageView)view.findViewById(R.id.report_btn_logo);
         report_btn_logo= view.findViewById(R.id.report_btn_logo);
 
-
-
-
         report_btn_logo.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -237,7 +234,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
-        TextView textView,price,edit,date;
+        TextView textView,price,edit,date,report;
         ImageButton report_btn_logo;
         TextView adId;
 
@@ -250,6 +247,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
             edit = itemView.findViewById(R.id.editAdID);
             adId = itemView.findViewById(R.id.adID);
             report_btn_logo = itemView.findViewById(R.id.report_btn_logo);
+            report = itemView.findViewById(R.id.report_btn);
             date = itemView.findViewById(R.id.view_dashboard_date);
 
         }
@@ -266,14 +264,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
             myRef.orderByChild("ad_id").equalTo(postkey).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                   for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                        if (Boolean.parseBoolean(snapshot.child("under_report").getValue().toString())) {
-                            System.out.println("sdfghgfdsdfghgfdsdfghjhgfdsdfghjhgfds");
-                            report_btn_logo.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_baseline_flag_24));
-                        } else {
-                            report_btn_logo.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_baseline_outlined_flag_24));
-                        }
-
+                   for (DataSnapshot snapshot : datasnapshot.getChildren())
+                   {
+                       if(snapshot.child("advertiser").getValue().toString().equals(global.getUser().email_id))
+                       {
+                           report_btn_logo.setVisibility(View.GONE);
+                           report.setVisibility(View.GONE);
+                       }
+                       else
+                       {
+                           if(Boolean.parseBoolean(snapshot.child("under_report").getValue().toString()))
+                           {
+                               System.out.println("sdfghgfdsdfghgfdsdfghjhgfdsdfghjhgfds");
+                               report_btn_logo.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_baseline_flag_24));
+                           }
+                           else
+                           {
+                               report_btn_logo.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_baseline_outlined_flag_24));
+                           }
+                       }
                     }
                }
 
