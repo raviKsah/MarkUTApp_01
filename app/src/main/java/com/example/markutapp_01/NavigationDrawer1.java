@@ -77,7 +77,7 @@ public class NavigationDrawer1 extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         categoryList = (Spinner) findViewById(R.id.searchCategories);
-        
+
         appTitle = findViewById(R.id.appTitle);
 
 //        firebaseAuth = FirebaseDatabase.getInstance().getReference("Advertisements");
@@ -171,8 +171,6 @@ public class NavigationDrawer1 extends AppCompatActivity
             closeDrawer();
             return true;
         });
-
-
 
         recyclerView=findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
