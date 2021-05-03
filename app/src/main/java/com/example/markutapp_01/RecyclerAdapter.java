@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,6 +58,41 @@ public class RecyclerAdapter extends RecyclerView.Adapter<com.example.markutapp_
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ad_list,parent,false);
 
         global = Globals.getInstance();
+
+        Button deactivate = (Button)view.findViewById(R.id.admin_deactivate_btn);
+
+        if(!global.getUser().type.toLowerCase().equals("admin"))
+        {
+            deactivate.setVisibility(View.GONE);
+        }
+
+        deactivate.setOnClickListener(new View.OnClickListener()
+        {
+
+            @Override
+            public void onClick(View v)
+            {
+                TextView adid = (TextView)view.findViewById(R.id.adID);
+
+                myRef.orderByChild("ad_id").equalTo(adid.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot datasnapshot)
+                    {
+                        for(DataSnapshot snapshot : datasnapshot.getChildren())
+                        {
+                            snapshot.child("is_complete").getRef().setValue(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error)
+                    {
+
+                    }
+                });
+            }
+        });
 
         TextView report = (TextView)view.findViewById(R.id.report_btn);
         ImageView reportLogo = (ImageView)view.findViewById(R.id.report_btn_logo);
