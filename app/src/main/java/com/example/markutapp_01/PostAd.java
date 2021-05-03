@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -100,6 +101,7 @@ public class PostAd extends AppCompatActivity {
 
         setContentView(R.layout.activity_post_ad1);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         databaseReference = FirebaseDatabase.getInstance().getReference(Database_Path);

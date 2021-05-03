@@ -57,7 +57,15 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/view_ad_card"
@@ -90,14 +98,14 @@
             <LinearLayout
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent">
-                    <TextView
-                        android:id="@+id/view_ad_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Honda Accord 2017"
-                        android:textSize="25dp"
-                        android:textAppearance="?attr/textAppearanceHeadline6"
-                        />
+
+                <TextView
+                    android:id="@+id/view_ad_title"
+                    android:layout_width="245dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Not Available"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:textSize="25dp" />
 
                 <TextView
                     android:id="@+id/view_ad_price"
@@ -171,7 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="@drawable/border"
-                    android:text="Driven 40,000 miles. Fully loaded, 2017 Honda Accord with cold AC. Navigation, Sunroof, Leather Seats, etc. Runs and drives good. Fresh oil change (today) and just replaced the back two tires. Battery was replaced in March. For any enquiry contact me on +1 762 763 9507 / rxs8289@mavs.uta.edu "
+                    android:text="Not available "
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="@color/black"
                     android:textSize="15dp"></TextView>
@@ -215,5 +223,7 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
