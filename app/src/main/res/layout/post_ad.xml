@@ -123,9 +123,10 @@
 
         <Switch
             android:id="@+id/deactivate"
-            android:layout_marginLeft="45dp"
             android:layout_width="wrap_content"
-            android:layout_height="106dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="45dp"
             android:text="Deactivate Ad" />
 
 
@@ -138,14 +139,12 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="100dp"
         android:background="@drawable/btn_corner"
         android:text="Post Advertisement"
         android:textColor="#ffffff"
         android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SelectImage" />
+        android:textStyle="bold" />
     </LinearLayout>
 
 </ScrollView>
