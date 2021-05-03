@@ -220,7 +220,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     if(dataSnapshot.exists()){
 
-                        Toast.makeText(RegisterActivity.this,"User Already Exits",Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this,"This user already exists!",Toast.LENGTH_LONG).show();
                         Intent intent=new Intent(RegisterActivity.this, RegisterActivity.class);
                         startActivity(intent);
                     }
